@@ -1,0 +1,35 @@
+workflows:
+  ios-release:
+    name: iOS App Store Release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Huzur Vakti
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.huzurvakti.namazvakitleri
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install CocoaPods
+        script: |
+          pod install --repo-update || true
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+      - name: Build ipa
+        script: |
+          xcode-project build-ipa \
+            --workspace "Huzur Vakti.xcworkspace" \
+            --scheme "Huzur Vakti"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - "**/*.ipa"
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+      email:
+        recipients:
+          - fahrettinyaldiz@outlook.com
