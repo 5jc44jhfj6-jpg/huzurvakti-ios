@@ -14,7 +14,7 @@ workflows:
     scripts:
       - name: Install CocoaPods
         script: |
-          pod install --repo-update || true
+          pod install --repo-update
       - name: Set up code signing
         script: |
           xcode-project use-profiles
@@ -22,7 +22,7 @@ workflows:
         script: |
           xcode-project build-ipa \
             --workspace "Huzur Vakti.xcworkspace" \
-            --scheme "Huzur Vakti"
+            --scheme "Huzur Vakti" || (cat /tmp/xcodebuild_logs/*.log && exit 1)
     artifacts:
       - build/ios/ipa/*.ipa
       - "**/*.ipa"
@@ -30,6 +30,3 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-      email:
-        recipients:
-          - fahrettinyaldiz@outlook.com
