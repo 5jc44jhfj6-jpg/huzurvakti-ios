@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Capture Audio by user request</string>
+	<string>Uygulama, sesli not veya arama özellikleri için mikrofon erişimine ihtiyaç duyabilir.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Track current location by user request</string>
+	<string>Huzur Vakti, size en doğru ezan vakitlerini sunmak ve canlı kıble pusulası ile Kâbe yönünü bulmanızı sağlamak için konumunuza ihtiyaç duyar.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture Video by user request</string>
+	<string>Uygulama, profil fotoğrafı yükleme veya görsel tarama işlemleri için kamera erişimine ihtiyaç duyabilir.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
