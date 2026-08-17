@@ -5,7 +5,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Uygulama, sesli not veya arama özellikleri için mikrofon erişimine ihtiyaç duyabilir.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Huzur Vakti, size en doğru ezan vakitlerini sunmak ve canlı kıble pusulası ile Kâbe yönünü bulmanızı sağlamak için konumunuza ihtiyaç duyar.</string>
+	<string>Huzur Vakti, bulunduğunuz konuma göre en doğru namaz vakitlerini hesaplamak ve pusula ile Kıble yönünü size doğru şekilde göstermek için anlık konumunuza ihtiyaç duyar. Konum verileriniz hiçbir sunucuda saklanmaz.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Uygulama, profil fotoğrafı yükleme veya görsel tarama işlemleri için kamera erişimine ihtiyaç duyabilir.</string>
 	<key>CFBundleDevelopmentRegion</key>
