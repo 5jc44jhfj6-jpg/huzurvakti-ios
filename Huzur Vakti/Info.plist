@@ -2,12 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Capture Audio by user request</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Track current location by user request</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Capture Video by user request</string>
+	<string>Huzur Vakti uses your location to calculate accurate daily prayer times for your city and to show the Qibla (direction of Mecca) on the compass. For example, your coordinates are used to determine Fajr, Dhuhr, Asr, Maghrib and Isha times for your exact location. Your location data is only used on-device and is never sent to any server.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -23,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>1.0</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -36,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>
@@ -98,7 +94,7 @@
 	<true/>
 	<key>WKAppBoundDomains</key>
 	<array>
-		<string>huzurvaktinamazuygulamasi-2.vercel.app</string>
+		<string>huzurvaktinamazuygulamasi.vercel.app</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
@@ -106,6 +102,5 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
-	
 </dict>
 </plist>
