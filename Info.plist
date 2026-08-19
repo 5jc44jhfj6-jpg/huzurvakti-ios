@@ -2,12 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Uygulama, sesli not veya arama özellikleri için mikrofon erişimine ihtiyaç duyabilir.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Huzur Vakti, bulunduğunuz konuma göre en doğru namaz vakitlerini hesaplamak ve pusula ile Kıble yönünü size doğru şekilde göstermek için anlık konumunuza ihtiyaç duyar. Konum verileriniz hiçbir sunucuda saklanmaz.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Uygulama, profil fotoğrafı yükleme veya görsel tarama işlemleri için kamera erişimine ihtiyaç duyabilir.</string>
+	<string>Huzur Vakti uses your location to calculate accurate daily prayer times for your city and to show the Qibla (direction of Mecca) on the compass. For example, your coordinates are used to determine Fajr, Dhuhr, Asr, Maghrib and Isha times for your exact location. Your location data is only used on-device and is never sent to any server.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -36,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>
@@ -98,7 +94,7 @@
 	<true/>
 	<key>WKAppBoundDomains</key>
 	<array>
-		<string>huzurvaktinamazuygulamasi-2.vercel.app</string>
+		<string>huzurvaktinamazuygulamasi.vercel.app</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
@@ -106,6 +102,5 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
-	
 </dict>
 </plist>
