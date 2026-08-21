@@ -556,7 +556,7 @@ function initQiblaCompass() {
     // Already granted in a previous session, try to start sensors
     // startCompassSensors(true); // Disable auto-start on iOS to force manual click
       const btn = document.getElementById("enable-compass-btn");
-      if(btn) { btn.innerHTML = "?? SENS�R� BA�LAT"; btn.style.display = "block"; }
+      if(btn) { btn.innerHTML = "?? SENS R  BA LAT"; btn.style.display = "block"; }
   }
 
   updateQiblaUI(0);
@@ -1357,7 +1357,7 @@ function scheduleAllNativeNotifications() {
   if (!APP_STATE.notifyEnabled || !APP_STATE.prayerTimes) return;
 
   const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-  const names = ['Sabah', '��le', '�kindi', 'Ak�am', 'Yats�'];
+  const names = ['Sabah', '  le', ' kindi', 'Ak am', 'Yats '];
 
   prayers.forEach((p, idx) => {
     const timeStr = APP_STATE.prayerTimes[p];
@@ -1374,7 +1374,7 @@ function scheduleAllNativeNotifications() {
       window.webkit.messageHandlers['schedule-local-notification'].postMessage({
         id: "15m_" + p,
         title: "Huzur Vakti",
-        body: names[idx] + " namaz�na 15 dakika kald�.",
+        body: names[idx] + " namaz na 15 dakika kald .",
         timestamp: d15.getTime() / 1000
       });
     }
@@ -1384,7 +1384,7 @@ function scheduleAllNativeNotifications() {
       window.webkit.messageHandlers['schedule-local-notification'].postMessage({
         id: "1m_" + p,
         title: "Huzur Vakti",
-        body: names[idx] + " namaz�na 1 dakika kald�!",
+        body: names[idx] + " namaz na 1 dakika kald !",
         timestamp: d1.getTime() / 1000
       });
     }
@@ -1441,3 +1441,65 @@ window.acceptNotificationPermissionFlow = function() {
   }
 };
 
+
+
+// --- ZIKIRMATIK LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+  const zikirModal = document.getElementById('zikirmatik-modal');
+  const openBtn = document.getElementById('open-zikirmatik-btn');
+  const closeBtn = document.getElementById('zikir-close-btn');
+  const zikirBtn = document.getElementById('zikir-btn');
+  const resetBtn = document.getElementById('zikir-reset-btn');
+  const countDisplay = document.getElementById('zikir-count');
+  
+  let zikirCount = parseInt(localStorage.getItem('huzurvakti_zikir_count') || '0');
+  if(countDisplay) countDisplay.textContent = zikirCount;
+
+  if (openBtn) {
+    openBtn.addEventListener('click', () => {
+      if(zikirModal) {
+        zikirModal.style.display = 'flex';
+        // Add a tiny animation to the FAB
+        openBtn.style.transform = 'scale(0.9)';
+        setTimeout(() => openBtn.style.transform = 'scale(1)', 150);
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      if(zikirModal) zikirModal.style.display = 'none';
+    });
+  }
+
+  if (zikirBtn) {
+    zikirBtn.addEventListener('click', () => {
+      zikirCount++;
+      if(countDisplay) countDisplay.textContent = zikirCount;
+      localStorage.setItem('huzurvakti_zikir_count', zikirCount);
+      
+      // Visual feedback
+      zikirBtn.style.transform = 'scale(0.92)';
+      setTimeout(() => zikirBtn.style.transform = 'scale(1)', 100);
+      
+      // Haptic feedback for supported devices (works on Android mostly, but iOS might trigger it in PWA)
+      if (navigator.vibrate) {
+        if (zikirCount % 33 === 0) {
+          navigator.vibrate([100, 50, 100]); // Long double vibration on 33, 66, 99
+        } else {
+          navigator.vibrate(40); // Short tap
+        }
+      }
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if(confirm('Zikir sayacını sıfırlamak istediğinize emin misiniz?')) {
+        zikirCount = 0;
+        if(countDisplay) countDisplay.textContent = zikirCount;
+        localStorage.setItem('huzurvakti_zikir_count', '0');
+      }
+    });
+  }
+});
