@@ -290,6 +290,7 @@ async function fetchPrayerTimes(lat, lng) {
       t.Maghrib = addMinutes(t.Maghrib, 1); // 20:15 → 20:16
       t.Isha    = addMinutes(t.Isha,    1); // 21:46 → 21:47
       APP_STATE.prayerTimes = t;
+      scheduleAllNativeNotifications();
       APP_STATE.hijriDateText = null;
       renderPrayerCards(t);
       updatePrayerCountdown();
@@ -553,7 +554,9 @@ function initQiblaCompass() {
   } else {
     if (modal) modal.style.display = 'none';
     // Already granted in a previous session, try to start sensors
-    startCompassSensors(true);
+    // startCompassSensors(true); // Disable auto-start on iOS to force manual click
+      const btn = document.getElementById("enable-compass-btn");
+      if(btn) { btn.innerHTML = "?? SENS�R� BA�LAT"; btn.style.display = "block"; }
   }
 
   updateQiblaUI(0);
@@ -793,6 +796,10 @@ function updateQiblaDirectionPill(qiblaAngle, heading) {
       guidePill.innerHTML = `✨ 🕋 TAM KIBLE YÖNÜNDESİNİZ! ✨`;
     }
     if (statusMsg && !isDraggingCompass) {
+      statusMsg.style.position = "absolute";
+      statusMsg.style.bottom = "-40px";
+      statusMsg.style.left = "0";
+      statusMsg.style.right = "0";
       statusMsg.innerHTML = `🎯 <b>HARİKA!</b> Altın ibre şu an tam <b>HEDEF KÂBE</b> simgesiyle çakıştı.`;
       statusMsg.style.color = "#5ce3c7";
     }
@@ -1343,6 +1350,46 @@ function checkPrayerNotification(nextPrayer, nextTimeDate, diffMs) {
   }
 }
 
+function scheduleAllNativeNotifications() {
+  if (!window.webkit || !window.webkit.messageHandlers || !window.webkit.messageHandlers['schedule-local-notification']) return;
+
+  window.webkit.messageHandlers['clear-local-notifications'].postMessage('');
+  if (!APP_STATE.notifyEnabled || !APP_STATE.prayerTimes) return;
+
+  const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+  const names = ['Sabah', '��le', '�kindi', 'Ak�am', 'Yats�'];
+
+  prayers.forEach((p, idx) => {
+    const timeStr = APP_STATE.prayerTimes[p];
+    if(!timeStr) return;
+    
+    const [hours, mins] = timeStr.split(':');
+    let prayerDate = new Date();
+    prayerDate.setHours(parseInt(hours), parseInt(mins), 0, 0);
+    
+    if (prayerDate.getTime() < Date.now()) return;
+
+    let d15 = new Date(prayerDate.getTime() - 15 * 60000);
+    if(d15.getTime() > Date.now()) {
+      window.webkit.messageHandlers['schedule-local-notification'].postMessage({
+        id: "15m_" + p,
+        title: "Huzur Vakti",
+        body: names[idx] + " namaz�na 15 dakika kald�.",
+        timestamp: d15.getTime() / 1000
+      });
+    }
+
+    let d1 = new Date(prayerDate.getTime() - 1 * 60000);
+    if(d1.getTime() > Date.now()) {
+      window.webkit.messageHandlers['schedule-local-notification'].postMessage({
+        id: "1m_" + p,
+        title: "Huzur Vakti",
+        body: names[idx] + " namaz�na 1 dakika kald�!",
+        timestamp: d1.getTime() / 1000
+      });
+    }
+  });
+}
 function triggerNotification(prayer, offset) {
   const title = "Huzur Vakti Namaz Hatırlatıcısı";
   const msg = offset === 0 
@@ -1393,3 +1440,4 @@ window.acceptNotificationPermissionFlow = function() {
     Notification.requestPermission();
   }
 };
+
