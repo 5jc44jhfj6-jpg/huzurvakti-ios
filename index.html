@@ -17,7 +17,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Huzur Vakti">
     <link rel="apple-touch-icon" href="icon-512.jpg">
-    <meta name="description" content="Namaz Vakitleri, Kıble Pusulası, Kuran-ı Kerim ve Namaz Rehberi">
+    <meta name="description" content="Namaz Vakitleri, KÄ±ble PusulasÄ±, Kuran-Ä± Kerim ve Namaz Rehberi">
 
     <link rel="stylesheet" href="styles.css?v=56.0.0">
     <script src="cities.js?v=56.0.0" defer></script>
@@ -33,34 +33,34 @@
         </div>
     </div>
 
-    <!-- App Header (🌙 Huzur Vakti) -->
+    <!-- App Header (ğŸŒ™ Huzur Vakti) -->
     <header id="app-header">
         <div class="header-container">
             <div class="brand-wrapper-center">
-                <span class="brand-logo-crescent">🌙</span>
+                <span class="brand-logo-crescent">ğŸŒ™</span>
                 <h1 class="brand-title-gold">Huzur Vakti</h1>
             </div>
             <div class="location-chip" id="location-chip-btn" onclick="navigateTo('settings')">
-                <span class="loc-icon">📍</span>
-                <span id="header-location">Yalova, Çınarcık</span>
+                <span class="loc-icon">ğŸ“</span>
+                <span id="header-location">Yalova, Ã‡Ä±narcÄ±k</span>
             </div>
         </div>
     </header>
 
     <!-- Main Content Wrapped in Main Frame Card (100vh Single Screen Fit) -->
     <main id="app-main">
-        <!-- ═══ 1. HOME SECTION ═══ -->
+        <!-- â•â•â• 1. HOME SECTION â•â•â• -->
         <section id="page-home" class="page-section active">
             <div class="hero-frame-box">
-                <!-- 1. EN ÜST: Canlı Saat ve Tarih -->
+                <!-- 1. EN ÃœST: CanlÄ± Saat ve Tarih -->
                 <div class="time-header-centered">
                     <div id="clock-display">15:43:00</div>
                     <div class="date-hijri-subrow">
-                        <span id="date-display">11 Ağustos 2026 Salı</span>
+                        <span id="date-display">11 AÄŸustos 2026 SalÄ±</span>
                     </div>
                 </div>
 
-                <!-- 2. ORTA: Dairesel Çember (SADECE İkindi Vaktine Kalan + Geri Sayım) -->
+                <!-- 2. ORTA: Dairesel Ã‡ember (SADECE Ä°kindi Vaktine Kalan + Geri SayÄ±m) -->
                 <div class="countdown-hero-wrap">
                     <div class="circle-progress-wrapper">
                         <svg class="circle-progress-svg" width="190" height="190" viewBox="0 0 190 190">
@@ -77,51 +77,51 @@
                             <circle id="countdown-progress" class="progress-bar" stroke-width="6" fill="transparent" r="85" cx="95" cy="95" stroke="url(#goldGradient)"/>
                         </svg>
                         <div class="countdown-inner">
-                            <div id="countdown-target" class="countdown-target">İkindi Vaktine Kalan</div>
+                            <div id="countdown-target" class="countdown-target">Ä°kindi Vaktine Kalan</div>
                             <div id="countdown-timer" class="countdown-timer-text">01:21:45</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. ALT: Namaz Vakitleri & Günün Ayeti -->
+                <!-- 3. ALT: Namaz Vakitleri & GÃ¼nÃ¼n Ayeti -->
                 <div class="hero-prayer-unified-box">
-                    <div class="corner-ornament tl">❖</div>
-                    <div class="corner-ornament tr">❖</div>
-                    <div class="corner-ornament bl">❖</div>
-                    <div class="corner-ornament br">❖</div>
+                    <div class="corner-ornament tl">â–</div>
+                    <div class="corner-ornament tr">â–</div>
+                    <div class="corner-ornament bl">â–</div>
+                    <div class="corner-ornament br">â–</div>
 
                     <div id="prayer-times-container" class="prayer-grid"></div>
 
                     <div class="daily-verse-card">
-                        <div class="verse-card-title">Günün Ayeti</div>
-                        <div id="daily-verse-arabic" class="verse-arabic">وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ...</div>
-                        <div id="daily-verse-turkish" class="verse-turkish">"Şüphesiz Allah, adaleti, iyilik yapmayı ve yakınlara bakmayı emreder. (Nahl, 90)"</div>
-                        <div id="daily-verse-source" class="verse-source">— Bakara Suresi, 186. Ayet</div>
+                        <div class="verse-card-title">GÃ¼nÃ¼n Ayeti</div>
+                        <div id="daily-verse-arabic" class="verse-arabic">ÙˆÙØ¥ÙØ°ÙØ§ Ø³ÙØ£ÙÙ„ÙÙƒÙ Ø¹ÙØ¨ÙØ§Ø¯ÙÙŠ Ø¹ÙÙ†ÙÙ‘ÙŠ ÙÙØ¥ÙÙ†ÙÙ‘ÙŠ Ù‚ÙØ±ÙÙŠØ¨ÙŒ...</div>
+                        <div id="daily-verse-turkish" class="verse-turkish">"ÅÃ¼phesiz Allah, adaleti, iyilik yapmayÄ± ve yakÄ±nlara bakmayÄ± emreder. (Nahl, 90)"</div>
+                        <div id="daily-verse-source" class="verse-source">â€” Bakara Suresi, 186. Ayet</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ═══ 2. QIBLA SECTION (KUSURSUZ KIBLE NAVİGASYONU) ═══ -->
+        <!-- â•â•â• 2. QIBLA SECTION (KUSURSUZ KIBLE NAVÄ°GASYONU) â•â•â• -->
         <section id="page-qibla" class="page-section">
             <div class="hero-frame-box">
                 <div class="page-header-title">
-                    <h2>🕋 Canlı Kıble Navigasyonu & Pusula</h2>
-                    <p id="qibla-user-loc">Yalova, Armutlu ➔ Mekke-i Mükerreme</p>
+                    <h2>ğŸ•‹ CanlÄ± KÄ±ble Navigasyonu & Pusula</h2>
+                    <p id="qibla-user-loc">Yalova, Armutlu â” Mekke-i MÃ¼kerreme</p>
                 </div>
 
                 <div class="qibla-wrapper">
-                    <!-- Canlı Yönlendirme Rozeti -->
+                    <!-- CanlÄ± YÃ¶nlendirme Rozeti -->
                     <div id="qibla-direction-pill" class="qibla-pill turn-right">
-                        ➡️ Sağa Dön (158°)
+                        â¡ï¸ SaÄŸa DÃ¶n (158Â°)
                     </div>
 
-                    <!-- Sabit Kâbe Hedefi (Üst 12 Yönü) ve Döner İbre Pusulası -->
+                    <!-- Sabit KÃ¢be Hedefi (Ãœst 12 YÃ¶nÃ¼) ve DÃ¶ner Ä°bre PusulasÄ± -->
                     <div id="compass-interactive-box" class="compass-container">
-                        <!-- Sabit 12 Yönündeki Kâbe Hedefi -->
+                        <!-- Sabit 12 YÃ¶nÃ¼ndeki KÃ¢be Hedefi -->
                         <div class="fixed-top-qibla-target">
-                            <div class="qibla-target-kaaba">🕋</div>
-                            <div class="qibla-target-badge">HEDEF KÂBE</div>
+                            <div class="qibla-target-kaaba">ğŸ•‹</div>
+                            <div class="qibla-target-badge">HEDEF KÃ‚BE</div>
                         </div>
 
                         <!-- Pusula Kadran Dairesi -->
@@ -133,90 +133,90 @@
                             <div class="compass-point w">B</div>
                         </div>
 
-                        <!-- Dönünen Canlı Pusula İbresi -->
+                        <!-- DÃ¶nÃ¼nen CanlÄ± Pusula Ä°bresi -->
                         <div id="compass-needle" class="dynamic-compass-needle">
-                            <div class="needle-gold-head">▲</div>
+                            <div class="needle-gold-head">â–²</div>
                             <div class="needle-stem"></div>
                             <div class="needle-pivot"></div>
                         </div>
                     </div>
 
-                    <!-- İstatistik Panel Kartları -->
+                    <!-- Ä°statistik Panel KartlarÄ± -->
                     <div class="qibla-stats-row">
                         <div class="stat-box">
-                            <div class="stat-label">Kıble Açınız</div>
-                            <div id="qibla-degree-val" class="stat-value">158° GD</div>
+                            <div class="stat-label">KÄ±ble AÃ§Ä±nÄ±z</div>
+                            <div id="qibla-degree-val" class="stat-value">158Â° GD</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-label">Kâbe Mesafesi</div>
+                            <div class="stat-label">KÃ¢be Mesafesi</div>
                             <div id="kaaba-dist-val" class="stat-value">2,385 km</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-label">Pusula Yönü</div>
-                            <div id="compass-heading-val" class="stat-value">0°</div>
+                            <div class="stat-label">Pusula YÃ¶nÃ¼</div>
+                            <div id="compass-heading-val" class="stat-value">0Â°</div>
                         </div>
                     </div>
 
-                    <!-- Sensör Yeniden Başlat Butonu -->
+                    <!-- SensÃ¶r Yeniden BaÅŸlat Butonu -->
                     <div class="compass-control-bar">
-                        <button id="enable-compass-btn" class="gold-primary-btn" onclick="requestQiblaPermissionFlow(event)">⚡ CANLI SENSÖRÜ REFRESH ET</button>
+                        <button id="enable-compass-btn" class="gold-primary-btn" onclick="requestQiblaPermissionFlow(event)">âš¡ CANLI SENSÃ–RÃœ REFRESH ET</button>
                     </div>
 
-                    <!-- Manuel Döner Çark Slider -->
+                    <!-- Manuel DÃ¶ner Ã‡ark Slider -->
                     <div class="manual-dial-wrap">
-                        <div class="manual-dial-label">👇 Parmağınızla veya kaydırıcı ile yönü ayarlayın:</div>
+                        <div class="manual-dial-label">ğŸ‘‡ ParmaÄŸÄ±nÄ±zla veya kaydÄ±rÄ±cÄ± ile yÃ¶nÃ¼ ayarlayÄ±n:</div>
                         <input type="range" id="manual-compass-slider" min="0" max="360" value="0" oninput="handleManualCompass(this.value)">
                     </div>
 
                     <div id="compass-status-msg" class="compass-note">
-                        💡 <b>Nasıl Kullanılır?</b> Telefonunuzu düz tutun ve döner altın ibreyi en üstteki sabit 🕋 <b>KÂBE HEDEFİNE</b> getirene kadar dönün.
+                        ğŸ’¡ <b>NasÄ±l KullanÄ±lÄ±r?</b> Telefonunuzu dÃ¼z tutun ve dÃ¶ner altÄ±n ibreyi en Ã¼stteki sabit ğŸ•‹ <b>KÃ‚BE HEDEFÄ°NE</b> getirene kadar dÃ¶nÃ¼n.
                     </div>
                 </div>
             </div>
 
-            <!-- Kıble İzin Onay Penceresi (Modal Prompt) -->
+            <!-- KÄ±ble Ä°zin Onay Penceresi (Modal Prompt) -->
             <div id="qibla-permission-modal" class="modal-backdrop-overlay" style="display: none;">
                 <div class="modal-dialog-card">
-                    <div class="modal-icon-badge">🕋</div>
-                    <h3>Kıble Yönü İzin Onayı</h3>
-                    <p>Kıblenin yönünü doğru bulabilmek için konum bilgisine ve telefon pusula sensörüne izin vermeniz gerekmektedir.</p>
+                    <div class="modal-icon-badge">ğŸ•‹</div>
+                    <h3>KÄ±ble YÃ¶nÃ¼ Bilgilendirme</h3>
+                    <p>KÄ±ble pusulasÄ±, doÄŸru yÃ¶nÃ¼ gÃ¶sterebilmek iÃ§in konumunuzu ve telefon pusula sensÃ¶rÃ¼nÃ¼ kullanÄ±r. Konum veriniz yalnÄ±zca cihazÄ±nÄ±zda iÅŸlenir, hiÃ§bir sunucuya gÃ¶nderilmez.</p>
                     <div class="modal-actions" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                        <button class="modal-approve-btn" onclick="acceptQiblaPermissionFlow()">✅ DEVAM ET</button>
+                        <button class="modal-approve-btn" onclick="acceptQiblaPermissionFlow()">âœ… DEVAM ET</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Bildirim İzin Onay Penceresi (Modal Prompt) -->
+            <!-- Bildirim Ä°zin Onay Penceresi (Modal Prompt) -->
             <div id="notify-permission-modal" class="modal-backdrop-overlay" style="display: none;">
                 <div class="modal-dialog-card">
-                    <div class="modal-icon-badge">🔔</div>
-                    <h3>Bildirim Onayı</h3>
-                    <p>Namaz vakitleri için cihazınızdan bildirim almak istiyor musunuz?</p>
+                    <div class="modal-icon-badge">ğŸ””</div>
+                    <h3>Bildirim OnayÄ±</h3>
+                    <p>Namaz vakitleri iÃ§in cihazÄ±nÄ±zdan bildirim almak istiyor musunuz?</p>
                     <div class="modal-actions" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                        <button class="modal-approve-btn" onclick="acceptNotificationPermissionFlow()">✅ DEVAM ET</button>
-                        <button class="modal-approve-btn" onclick="document.getElementById('notify-permission-modal').style.display='none'" style="background: var(--bg-deep); color: var(--text-sub); border: 1px solid var(--border-soft); box-shadow: none;">Şimdilik Geç</button>
+                        <button class="modal-approve-btn" onclick="acceptNotificationPermissionFlow()">âœ… DEVAM ET</button>
+                        <button class="modal-approve-btn" onclick="document.getElementById('notify-permission-modal').style.display='none'" style="background: var(--bg-deep); color: var(--text-sub); border: 1px solid var(--border-soft); box-shadow: none;">Åimdilik GeÃ§</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ═══ 3. QURAN SECTION ═══ -->
+        <!-- â•â•â• 3. QURAN SECTION â•â•â• -->
         <section id="page-quran" class="page-section">
             <div class="hero-frame-box">
                 <div id="surah-list-view">
                     <div class="page-header-title">
-                        <h2>📖 Kuran-ı Kerim</h2>
-                        <p>Arapça Metin ve Türkçe Meali (114 Sure)</p>
+                        <h2>ğŸ“– Kuran-Ä± Kerim</h2>
+                        <p>ArapÃ§a Metin ve TÃ¼rkÃ§e Meali (114 Sure)</p>
                     </div>
                     <div class="quran-search-bar">
-                        <span class="search-icon-fixed">🔍</span>
-                        <input type="text" id="surah-search-input" class="search-input-field" placeholder="Sure ara (ör. Fatiha, Yasin)...">
+                        <span class="search-icon-fixed">ğŸ”</span>
+                        <input type="text" id="surah-search-input" class="search-input-field" placeholder="Sure ara (Ã¶r. Fatiha, Yasin)...">
                     </div>
                     <div id="surah-list-wrap" class="surah-list-wrap"></div>
                 </div>
                 <div id="surah-detail-view" style="display: none;">
                     <div class="detail-toolbar">
-                        <button id="back-to-surahs" class="back-btn"><span>←</span> Sure Listesi</button>
+                        <button id="back-to-surahs" class="back-btn"><span>â†</span> Sure Listesi</button>
                         <div class="font-size-adjuster">
                             <button id="font-decrease" class="font-btn">A-</button>
                             <span id="font-size-val">20px</span>
@@ -226,7 +226,7 @@
                     
                     <div class="audio-player-card" style="background: var(--bg-card); border: 1px solid var(--border-gold); border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
                         <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
-                            <div style="font-size: 0.9rem; color: var(--gold-light); font-weight: 600;">🎙️ Sesli Dinle</div>
+                            <div style="font-size: 0.9rem; color: var(--gold-light); font-weight: 600;">ğŸ™ï¸ Sesli Dinle</div>
                             <select id="qari-select" style="background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border-light); border-radius: 6px; padding: 4px; font-size: 0.8rem; outline: none; cursor: pointer;">
                                 <option value="afs" data-server="server8">Mishary Rashid Alafasy</option>
                                 <option value="basit" data-server="server7">Abdul Basit Abdussamed</option>
@@ -243,23 +243,23 @@
             </div>
         </section>
 
-        <!-- ═══ 4. PRAYER GUIDE SECTION ═══ -->
+        <!-- â•â•â• 4. PRAYER GUIDE SECTION â•â•â• -->
         <section id="page-guide" class="page-section">
             <div class="hero-frame-box">
                 <div class="page-header-title">
-                    <h2>🤲 Rehber</h2>
-                    <p>5 Vakit Namazın Kılınışı & Dualar</p>
+                    <h2>ğŸ¤² Rehber</h2>
+                    <p>5 Vakit NamazÄ±n KÄ±lÄ±nÄ±ÅŸÄ± & Dualar</p>
                 </div>
                 <div class="guide-tabs-scroller">
                     <div id="prayer-pill-bar" class="prayer-type-pill-bar"></div>
                 </div>
                 <div id="rakat-summary-box" class="rakat-summary-box"></div>
                 
-                <!-- Rehber İçi Görünüm Seçici (Kılınış vs Dualar) -->
+                <!-- Rehber Ä°Ã§i GÃ¶rÃ¼nÃ¼m SeÃ§ici (KÄ±lÄ±nÄ±ÅŸ vs Dualar) -->
                 <div id="guide-view-switcher" class="guide-view-switcher">
-                    <button id="guide-tab-steps" class="guide-switch-btn active" onclick="switchGuideViewMode('steps')">📍 Kılınış Adımları</button>
-                    <button id="guide-tab-duas" class="guide-switch-btn" onclick="switchGuideViewMode('duas')">📿 Okunan Dualar & Sureler</button>
-                    <button id="guide-tab-all" class="guide-switch-btn" onclick="switchGuideViewMode('all')">📋 Tümünü Göster</button>
+                    <button id="guide-tab-steps" class="guide-switch-btn active" onclick="switchGuideViewMode('steps')">ğŸ“ KÄ±lÄ±nÄ±ÅŸ AdÄ±mlarÄ±</button>
+                    <button id="guide-tab-duas" class="guide-switch-btn" onclick="switchGuideViewMode('duas')">ğŸ“¿ Okunan Dualar & Sureler</button>
+                    <button id="guide-tab-all" class="guide-switch-btn" onclick="switchGuideViewMode('all')">ğŸ“‹ TÃ¼mÃ¼nÃ¼ GÃ¶ster</button>
                 </div>
 
                 <div id="prayer-steps-wrap"></div>
@@ -267,33 +267,33 @@
             </div>
         </section>
 
-        <!-- ═══ 5. SETTINGS SECTION ═══ -->
+        <!-- â•â•â• 5. SETTINGS SECTION â•â•â• -->
         <section id="page-settings" class="page-section">
             <div class="hero-frame-box">
                 <div class="page-header-title">
-                    <h2>⚙️ Ayarlar</h2>
+                    <h2>âš™ï¸ Ayarlar</h2>
                     <p>Konum ve Uygulama Tercihleri</p>
                 </div>
                 <div class="settings-group-wrapper">
                     <div class="settings-group">
-                        <div class="group-title">📍 Şehir ve İlçe Seçimi</div>
+                        <div class="group-title">ğŸ“ Åehir ve Ä°lÃ§e SeÃ§imi</div>
                         <div class="settings-card-box">
                             <div class="setting-row">
-                                <label for="city-select">İl</label>
+                                <label for="city-select">Ä°l</label>
                                 <select id="city-select" class="select-input"></select>
                             </div>
                             <div class="setting-row">
-                                <label for="district-select">İlçe</label>
+                                <label for="district-select">Ä°lÃ§e</label>
                                 <select id="district-select" class="select-input"></select>
                             </div>
                             <div class="action-row">
-                                <button id="auto-gps-btn" class="gold-primary-btn">📍 Otomatik GPS Konumu Al</button>
+                                <button id="auto-gps-btn" class="gold-primary-btn">ğŸ“ Otomatik GPS Konumu Al</button>
                                 <div id="location-status-msg"></div>
                             </div>
                         </div>
                     </div>
                     <div class="settings-group">
-                        <div class="group-title">🔔 Bildirim Ayarları</div>
+                        <div class="group-title">ğŸ”” Bildirim AyarlarÄ±</div>
                         <div class="settings-card-box">
                             <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
                                 <label for="notify-toggle" style="margin: 0; font-weight: 600;">Vakit Bildirimleri</label>
@@ -303,7 +303,7 @@
                                 </label>
                             </div>
                             <div class="setting-row">
-                                <label for="notify-time">Bildirim Zamanı</label>
+                                <label for="notify-time">Bildirim ZamanÄ±</label>
                                 <select id="notify-time" class="select-input">
                                     <option value="0">Tam vaktinde</option>
                                     <option value="1">1 dakika kala (Test)</option>
@@ -313,22 +313,22 @@
                                 </select>
                             </div>
                             <div class="setting-row">
-                                <label for="notify-sound">Bildirim Türü</label>
+                                <label for="notify-sound">Bildirim TÃ¼rÃ¼</label>
                                 <select id="notify-sound" class="select-input">
                                     <option value="silent">Sessiz (Sadece Ekranda)</option>
-                                    <option value="beep">Sesli (Kısa Zil)</option>
-                                    <option value="ezan">Sesli (Kısa Ezan)</option>
+                                    <option value="beep">Sesli (KÄ±sa Zil)</option>
+                                    <option value="ezan">Sesli (KÄ±sa Ezan)</option>
                                 </select>
                             </div>
-                            <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 8px;">* Tarayıcı/Cihaz bildirim izinlerinin açık olduğundan emin olun.</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 8px;">* TarayÄ±cÄ±/Cihaz bildirim izinlerinin aÃ§Ä±k olduÄŸundan emin olun.</div>
                         </div>
                     </div>
 
                     <div class="settings-group">
-                        <div class="group-title">🎙️ Ses ve Okuma</div>
+                        <div class="group-title">ğŸ™ï¸ Ses ve Okuma</div>
                         <div class="settings-card-box">
                             <div class="setting-row">
-                                <label for="settings-qari-select">Kuran Okuyucu (İmam)</label>
+                                <label for="settings-qari-select">Kuran Okuyucu (Ä°mam)</label>
                                 <select id="settings-qari-select" class="select-input">
                                     <option value="afs" data-server="server8">Mishary Rashid Alafasy</option>
                                     <option value="basit" data-server="server7">Abdul Basit Abdussamed</option>
@@ -339,10 +339,10 @@
                         </div>
                     </div>
                     <div class="settings-group">
-                        <div class="group-title">🎨 Görünüm</div>
+                        <div class="group-title">ğŸ¨ GÃ¶rÃ¼nÃ¼m</div>
                         <div class="settings-card-box">
                             <div class="setting-row">
-                                <label for="theme-toggle">Karanlık Tema (Lüks Gece)</label>
+                                <label for="theme-toggle">KaranlÄ±k Tema (LÃ¼ks Gece)</label>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="theme-toggle" checked>
                                     <span class="toggle-slider"></span>
@@ -355,34 +355,34 @@
                         </div>
                     </div>
                     <div class="settings-group">
-                        <div class="group-title">🔊 Ses & Bildirim</div>
+                        <div class="group-title">ğŸ”Š Ses & Bildirim</div>
                         <div class="settings-card-box">
                             <div class="setting-row">
-                                <label for="reciter-select">Kuran Okuyucu (İmam)</label>
+                                <label for="reciter-select">Kuran Okuyucu (Ä°mam)</label>
                                 <select id="reciter-select" class="select-input" disabled>
                                     <option value="alafasy" selected>Mishary Rashid Alafasy</option>
-                                    <option value="abdulbasit">Abdulbasit Abdussamed (Yakında)</option>
+                                    <option value="abdulbasit">Abdulbasit Abdussamed (YakÄ±nda)</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="app-info-footer">
-                        <div class="footer-logo">🕌</div>
+                        <div class="footer-logo">ğŸ•Œ</div>
                         <div class="footer-ver">Huzur Vakti v1.1 Premium</div>
-                        <div style="font-size: 0.8rem; margin-top: 4px;">Tüm Hakları Saklıdır • Diyanet Uyumlu</div>
+                        <div style="font-size: 0.8rem; margin-top: 4px;">TÃ¼m HaklarÄ± SaklÄ±dÄ±r â€¢ Diyanet Uyumlu</div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Bottom Navigation Bar (Büyütülmüş Rahat Alt Menü) -->
+    <!-- Bottom Navigation Bar (BÃ¼yÃ¼tÃ¼lmÃ¼ÅŸ Rahat Alt MenÃ¼) -->
     <nav id="bottom-nav">
-        <button class="nav-tab active" data-page="home"><span class="tab-icon">🏠</span><span class="tab-label">Ana Sayfa</span></button>
-        <button class="nav-tab" data-page="qibla"><span class="tab-icon">🧭</span><span class="tab-label">Pusula</span></button>
-        <button class="nav-tab" data-page="guide"><span class="tab-icon">🤲</span><span class="tab-label">Rehber</span></button>
-        <button class="nav-tab" data-page="quran"><span class="tab-icon">📖</span><span class="tab-label">Kuran</span></button>
-        <button class="nav-tab" data-page="settings"><span class="tab-icon">⚙️</span><span class="tab-label">Ayarlar</span></button>
+        <button class="nav-tab active" data-page="home"><span class="tab-icon">ğŸ </span><span class="tab-label">Ana Sayfa</span></button>
+        <button class="nav-tab" data-page="qibla"><span class="tab-icon">ğŸ§­</span><span class="tab-label">Pusula</span></button>
+        <button class="nav-tab" data-page="guide"><span class="tab-icon">ğŸ¤²</span><span class="tab-label">Rehber</span></button>
+        <button class="nav-tab" data-page="quran"><span class="tab-icon">ğŸ“–</span><span class="tab-label">Kuran</span></button>
+        <button class="nav-tab" data-page="settings"><span class="tab-icon">âš™ï¸</span><span class="tab-label">Ayarlar</span></button>
     </nav>
 
     <div id="app-toast" class="app-toast-box"></div>
@@ -391,7 +391,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js?vv=56.0.0')
+          navigator.serviceWorker.register('/sw.js?v=56.0.0')
             .then(reg => {
               reg.onupdatefound = () => {
                 const installingWorker = reg.installing;
@@ -406,5 +406,24 @@
         });
       }
     </script>
+  <!-- Zikirmatik Modal -->
+  <div id="zikirmatik-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div class="modal-content" style="background: var(--bg-dark); border: 2px solid var(--border-gold); padding: 30px 20px; border-radius: 24px; text-align: center; width: 90%; max-width: 350px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+      <h3 style="color: var(--gold-light); margin-bottom: 25px; font-size: 1.5rem; letter-spacing: 1px;">📿 Zikirmatik</h3>
+      
+      <div style="background: #061510; border-radius: 15px; padding: 25px 10px; margin-bottom: 35px; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: inset 0 4px 15px rgba(0,0,0,0.6);">
+        <div id="zikir-count" style="font-size: 4.5rem; font-weight: bold; color: var(--gold); font-family: 'Outfit', sans-serif; text-shadow: 0 0 20px rgba(212,175,55,0.4);">0</div>
+      </div>
+      
+      <button id="zikir-btn" style="width: 130px; height: 130px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #f7e8a1 0%, #d4af37 60%, #9e7f1c 100%); border: none; box-shadow: 0 10px 25px rgba(212,175,55,0.4), inset 0 -8px 20px rgba(0,0,0,0.3), inset 0 6px 15px rgba(255,255,255,0.6); cursor: pointer; color: #0a1f16; font-size: 1.8rem; font-weight: 800; margin-bottom: 30px; transition: all 0.1s; -webkit-tap-highlight-color: transparent;">BAS</button>
+      
+      <div style="display: flex; justify-content: space-between; gap: 15px;">
+        <button id="zikir-reset-btn" style="flex: 1; padding: 12px; border-radius: 12px; background: rgba(255,82,82,0.1); color: #ff5252; border: 1px solid rgba(255,82,82,0.3); font-weight: 600; cursor: pointer;">Sıfırla</button>
+        <button id="zikir-close-btn" style="flex: 1; padding: 12px; border-radius: 12px; background: rgba(212,175,55,0.1); color: var(--gold-light); border: 1px solid rgba(212,175,55,0.3); font-weight: 600; cursor: pointer;">Kapat</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+
+
