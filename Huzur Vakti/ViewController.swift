@@ -279,8 +279,21 @@ extension ViewController: WKScriptMessageHandler {
                 let content = UNMutableNotificationContent()
                 content.title = title
                 content.body = body
-                content.sound = UNNotificationSound.default
-                
+
+                // Bildirim sesi (web tarafından "sound" alanı ile gelir)
+                //  "ezan"    -> uygulama paketindeki ezan.caf (yoksa varsayılan ses)
+                //  "none"    -> sessiz
+                //  diğer     -> telefonun varsayılan bildirim sesi
+                let soundKey = (dict["sound"] as? String) ?? "default"
+                if soundKey == "none" {
+                    content.sound = nil
+                } else if soundKey == "ezan",
+                          Bundle.main.url(forResource: "ezan", withExtension: "caf") != nil {
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "ezan.caf"))
+                } else {
+                    content.sound = UNNotificationSound.default
+                }
+
                 let triggerDate = Date(timeIntervalSince1970: timestamp)
                 let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: triggerDate)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
