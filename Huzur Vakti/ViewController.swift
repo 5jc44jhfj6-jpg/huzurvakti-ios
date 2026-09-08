@@ -28,9 +28,10 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
 
     // ── Açılış (splash) ekranı ──
     private var splashActive = true
-    private var splashIconView: UIImageView?
+    private var splashBgView: UIImageView?
     private var splashTitle: UILabel?
     private var splashSubtitle: UILabel?
+    private var splashZoomStarted = false
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
         if splashActive { return .lightContent }
@@ -255,73 +256,90 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     private var hvGold: UIColor { UIColor(red: 0.890, green: 0.678, blue: 0.510, alpha: 1) }      // #E3AD82
     private var hvGoldPale: UIColor { UIColor(red: 0.969, green: 0.867, blue: 0.769, alpha: 1) }  // #F7DDC4
     private var hvBgDark: UIColor { UIColor(red: 0.086, green: 0.043, blue: 0.016, alpha: 1) }    // #160B04
+    private var hvBgDeep: UIColor { UIColor(red: 0.012, green: 0.106, blue: 0.153, alpha: 1) }    // #031B27
 
     func setupSplashDesign() {
         guard let lv = loadingView else { return }
-        lv.backgroundColor = hvBgDark
+        lv.backgroundColor = hvBgDeep
+        lv.clipsToBounds = true
 
-        // Storyboard'daki küçük ikonu ve ilerleme çubuğunu gizle
-        for sub in lv.subviews {
-            if let iv = sub as? UIImageView, iv !== connectionProblemView { iv.isHidden = true }
+        // Storyboard'daki kucuk ikonu ve ilerleme cubugunu gizle
+        for old in lv.subviews {
+            if let iv = old as? UIImageView, iv !== connectionProblemView { iv.isHidden = true }
         }
         progressView?.isHidden = true
         connectionProblemView?.tintColor = hvGoldPale.withAlphaComponent(0.8)
 
-        // ── Uygulama ikonu ──
-        let icon = UIImageView(image: UIImage(named: "SplashIcon") ?? UIImage(named: "LaunchIcon"))
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.contentMode = .scaleAspectFill
-        icon.layer.cornerRadius = 22
-        icon.layer.cornerCurve = .continuous
-        icon.clipsToBounds = true
-        lv.addSubview(icon)
-        splashIconView = icon
+        // ── Arka plan gorseli ──
+        // Cerceve ELLE hesaplanmiyor; dort kenardan otomatik yerlesim ile sabit.
+        // Koyu perde gorselin icine islenmis durumda, ayri bir katman yok.
+        let bg = UIImageView(image: UIImage(named: "SplashBg"))
+        bg.translatesAutoresizingMaskIntoConstraints = false
+        bg.contentMode = .scaleAspectFill
+        bg.clipsToBounds = true
+        bg.isUserInteractionEnabled = false
+        lv.addSubview(bg)
+        splashBgView = bg
 
-        // ── İsim ──
+        // ── Isim ──
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textAlignment = .center
+        title.numberOfLines = 1
+        title.adjustsFontSizeToFitWidth = true
+        title.minimumScaleFactor = 0.7
         title.attributedText = NSAttributedString(
             string: "NAMAZ DOSTU",
-            attributes: [.kern: 3.0,
-                         .font: UIFont.systemFont(ofSize: 23, weight: .semibold),
+            attributes: [.kern: 4.0,
+                         .font: UIFont.systemFont(ofSize: 26, weight: .semibold),
                          .foregroundColor: hvGoldPale])
+        title.layer.shadowColor = UIColor.black.cgColor
+        title.layer.shadowOpacity = 0.5
+        title.layer.shadowRadius = 10
+        title.layer.shadowOffset = .zero
         lv.addSubview(title)
         splashTitle = title
 
-        // ── Alt yazı ──
-        let sub = UILabel()
-        sub.translatesAutoresizingMaskIntoConstraints = false
-        sub.textAlignment = .center
-        sub.attributedText = NSAttributedString(
+        // ── Alt yazi ──
+        let cap = UILabel()
+        cap.translatesAutoresizingMaskIntoConstraints = false
+        cap.textAlignment = .center
+        cap.numberOfLines = 1
+        cap.adjustsFontSizeToFitWidth = true
+        cap.minimumScaleFactor = 0.7
+        cap.attributedText = NSAttributedString(
             string: "VAKİT • KIBLE • KUR'AN",
             attributes: [.kern: 2.6,
                          .font: UIFont.systemFont(ofSize: 11, weight: .regular),
-                         .foregroundColor: hvGold.withAlphaComponent(0.62)])
-        lv.addSubview(sub)
-        splashSubtitle = sub
+                         .foregroundColor: hvGold.withAlphaComponent(0.82)])
+        cap.layer.shadowColor = UIColor.black.cgColor
+        cap.layer.shadowOpacity = 0.5
+        cap.layer.shadowRadius = 8
+        cap.layer.shadowOffset = .zero
+        lv.addSubview(cap)
+        splashSubtitle = cap
 
         NSLayoutConstraint.activate([
-            icon.centerXAnchor.constraint(equalTo: lv.centerXAnchor),
-            icon.centerYAnchor.constraint(equalTo: lv.centerYAnchor, constant: -40),
-            icon.widthAnchor.constraint(equalToConstant: 96),
-            icon.heightAnchor.constraint(equalToConstant: 96),
+            bg.topAnchor.constraint(equalTo: lv.topAnchor),
+            bg.bottomAnchor.constraint(equalTo: lv.bottomAnchor),
+            bg.leadingAnchor.constraint(equalTo: lv.leadingAnchor),
+            bg.trailingAnchor.constraint(equalTo: lv.trailingAnchor),
 
-            title.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 28),
+            cap.bottomAnchor.constraint(equalTo: lv.safeAreaLayoutGuide.bottomAnchor, constant: -54),
+            cap.centerXAnchor.constraint(equalTo: lv.centerXAnchor),
+            cap.leadingAnchor.constraint(greaterThanOrEqualTo: lv.leadingAnchor, constant: 20),
+            cap.trailingAnchor.constraint(lessThanOrEqualTo: lv.trailingAnchor, constant: -20),
+
+            title.bottomAnchor.constraint(equalTo: cap.topAnchor, constant: -10),
             title.centerXAnchor.constraint(equalTo: lv.centerXAnchor),
-            title.leadingAnchor.constraint(greaterThanOrEqualTo: lv.leadingAnchor, constant: 24),
-            title.trailingAnchor.constraint(lessThanOrEqualTo: lv.trailingAnchor, constant: -24),
-
-            sub.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 9),
-            sub.centerXAnchor.constraint(equalTo: lv.centerXAnchor),
-            sub.leadingAnchor.constraint(greaterThanOrEqualTo: lv.leadingAnchor, constant: 24),
-            sub.trailingAnchor.constraint(lessThanOrEqualTo: lv.trailingAnchor, constant: -24)
+            title.leadingAnchor.constraint(greaterThanOrEqualTo: lv.leadingAnchor, constant: 20),
+            title.trailingAnchor.constraint(lessThanOrEqualTo: lv.trailingAnchor, constant: -20)
         ])
 
-        // Başlangıçta görünmez — sadece saydamlık animasyonu (yerleşimi etkilemez)
-        icon.alpha = 0
+        // Gorsel bastan gorunur (LaunchScreen ile birebir ayni), yazilar yumusakca gelir
+        bg.alpha = 1
         title.alpha = 0
-        sub.alpha = 0
+        cap.alpha = 0
 
         if let cp = connectionProblemView { lv.bringSubviewToFront(cp) }
 
@@ -330,27 +348,33 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     }
 
     private func startSplashAnimations() {
-        UIView.animate(withDuration: 0.55, delay: 0.05, options: [.curveEaseOut], animations: {
-            self.splashIconView?.alpha = 1
-        }, completion: nil)
-        UIView.animate(withDuration: 0.55, delay: 0.30, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.60, delay: 0.20, options: [.curveEaseOut], animations: {
             self.splashTitle?.alpha = 1
         }, completion: nil)
-        UIView.animate(withDuration: 0.55, delay: 0.48, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.60, delay: 0.38, options: [.curveEaseOut], animations: {
             self.splashSubtitle?.alpha = 1
         }, completion: nil)
     }
 
     func stopSplashAnimations() {
         splashActive = false
-        splashIconView?.layer.removeAllAnimations()
+        splashBgView?.layer.removeAllAnimations()
         splashTitle?.layer.removeAllAnimations()
         splashSubtitle?.layer.removeAllAnimations()
         setNeedsStatusBarAppearanceUpdate()
     }
 
+    // Yakinlasma animasyonu SADECE ilk yerlesim bittikten sonra baslar.
+    // Boylece gecen seferki "kucuk kare" hatasi bir daha olusamaz.
     func layoutSplash() {
-        // Her şey Auto Layout ile yerleşiyor; burada yapılacak bir hesap yok.
+        guard splashActive, !splashZoomStarted,
+              let bg = splashBgView, bg.bounds.width > 1, bg.bounds.height > 1 else { return }
+        splashZoomStarted = true
+        bg.transform = .identity
+        UIView.animate(withDuration: 18.0, delay: 0.0,
+                       options: [.curveLinear, .allowUserInteraction], animations: {
+            bg.transform = CGAffineTransform(scaleX: 1.12, y: 1.12)
+        }, completion: nil)
     }
 
     deinit {
