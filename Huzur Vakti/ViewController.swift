@@ -23,6 +23,9 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     var htmlIsLoaded = false;
     private var loadingMode = LoadingMode.defaultCachePolicy
 
+    private var themeObservation: NSKeyValueObservation?
+    var currentWebViewTheme: UIUserInterfaceStyle = .unspecified
+
     // ── Açılış (splash) ekranı ──
     private var splashActive = true
     private var splashIconView: UIImageView?
