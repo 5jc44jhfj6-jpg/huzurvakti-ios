@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Namaz Dostu - Namaz Vakitleri, Ezan & Kuran</title>
+
+    <!-- Google Fonts
+         v66.4: yazı tipleri sayfa AÇILDIKTAN SONRA yüklenir. Eskiden sayfanın
+         başında bekletiliyordu; Google'a yavaş/takılan bir Wi-Fi'de uygulama
+         açılış ekranında kalıyordu. Yazı tipi gelene kadar telefonun kendi
+         yazısı görünür, gelince yerine geçer (bir kez indikten sonra önbellekten). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>
+      (function () {
+        var adres = 'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Outfit:wght@300;400;500;600;700&display=swap';
+        function yukle() {
+          if (document.getElementById('hv-yazitipi')) return;
+          var l = document.createElement('link');
+          l.id = 'hv-yazitipi';
+          l.rel = 'stylesheet';
+          l.crossOrigin = 'anonymous';
+          l.href = adres;
+          document.head.appendChild(l);
+        }
+        if (document.readyState === 'complete') yukle();
+        else window.addEventListener('load', function () { setTimeout(yukle, 0); });
+      })();
+    </script>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1c0f07">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Namaz Dostu">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=66.4.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=66.4.0">
+    <meta name="description" content="Namaz Dostu: Namaz vakitleri, ezan, Kur'an-ı Kerim, kıble, dualar, zikirmatik ve yeni başlayanlar için adım adım namaz rehberi. Ücretsiz, reklamsız, çevrimdışı.">
+
+    <link rel="stylesheet" href="styles.css?v=66.4.0">
+    <script>window.HV_SURUM = '66.4.0';</script>
+    <script src="cities.js?v=66.4.0" defer></script>
+    <script src="data.js?v=66.4.0" defer></script>
+    <script src="content.js?v=66.4.0" defer></script>
+    <script src="hadisler.js?v=66.4.0" defer></script>
+    <script src="app.js?v=66.4.0" defer></script>
+    <script src="features.js?v=66.4.0" defer></script>
+</head>
+<body class="dark-theme">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-box">
+            <div class="loading-crescent"></div>
+            <div class="loading-title">Namaz Dostu</div>
+        </div>
+    </div>
+
+    <!-- App Header (🌙 Namaz Dostu) -->
+    <header id="app-header">
+        <div class="header-container">
+            <div class="brand-wrapper-center">
+                <span class="brand-logo-crescent">🌙</span>
+                <div class="brand-col">
+                    <h1 class="brand-title-gold">Namaz Dostu</h1>
+                    <span id="date-display-hijri" class="brand-hijri">Hicri Takvim</span>
+                    <span class="brand-badges">
+                        <span id="ramazan-badge" class="hv-badge hv-badge-ramazan" style="display:none;">🌙 Ramazan</span>
+                        <span id="offline-badge" class="hv-badge hv-badge-offline" style="display:none;">📵 Çevrimdışı</span>
+                    </span>
+                </div>
+            </div>
+            <div class="location-chip" id="location-chip-btn" onclick="navigateTo('settings')">
+                <span class="loc-icon">📍</span>
+                <span id="header-location">Yalova, Çınarcık</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapped in Main Frame Card (100vh Single Screen Fit) -->
+    <main id="app-main">
+        <!-- ═══ 1. HOME SECTION ═══ -->
+        <section id="page-home" class="page-section active">
+            <div class="hero-frame-box warm-home">
+                <!-- Geri sayım sahnesi: çentikli halka + ufuk ışığı + cami silüeti -->
+                <div class="cd-stage">
+                    <!-- Rüzgârlı gökyüzü: süzülen sis bantları + uçuşan ışık zerreleri -->
+                    <div class="wind-layer" aria-hidden="true">
+                        <span class="rays"></span>
+                        <span class="aurora a1"></span>
+                        <span class="aurora a2"></span>
+                        <span class="sky-body"><span class="sky-orb"></span></span>
+                        <span class="shooting"></span>
+                        <span class="gust g1"></span>
+                        <span class="gust g2"></span>
+                        <span class="gust g3"></span>
+                        <span class="gust g4"></span>
+                        <span class="cloud c1"></span>
+                        <span class="cloud c2"></span>
+                        <span class="cloud c3"></span>
+                        <span class="cloud c4"></span>
+                        <span class="cloud c5"></span>
+                        <span class="mote m1"></span><span class="mote m2"></span><span class="mote m3"></span><span class="mote m4"></span>
+                        <span class="mote m5"></span><span class="mote m6"></span><span class="mote m7"></span><span class="mote m8"></span>
+                        <span class="mote m9"></span><span class="mote m10"></span><span class="mote m11"></span><span class="mote m12"></span>
+                        <span class="mote m13"></span><span class="mote m14"></span><span class="mote m15"></span><span class="mote m16"></span>
+                    </div>
+                    <div class="cd-ring">
+                        <div class="cd-ticks"></div>
+                        <svg class="cd-arc" width="200" height="200" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="peachGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fce3ca" />
+                                    <stop offset="55%" stop-color="#efb98d" />
+                                    <stop offset="100%" stop-color="#cf8f5f" />
+                                </linearGradient>
+                                <linearGradient id="goldGradRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#fff5c3" />
+                                    <stop offset="55%" stop-color="#d4af37" />
+                                    <stop offset="100%" stop-color="#9e791b" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="cd-track" cx="100" cy="100" r="88" fill="none" stroke-width="9"/>
+                            <circle id="countdown-progress" class="cd-prog" cx="100" cy="100" r="88" fill="none" stroke-width="9" stroke="url(#peachGrad)"/>
+                        </svg>
+                        <div class="cd-center">
+                            <div id="countdown-target" class="cd-lbl">Öğle Vaktine</div>
+                            <div id="countdown-timer" class="cd-time">04:38:52</div>
+                            <div id="countdown-next" class="cd-ezan">Ezan 13:18</div>
+                        </div>
+                    </div>
+                    <div class="horizon">
+                        <div class="horizon-glow"></div>
+                        <svg class="mosque" viewBox="0 0 320 92" preserveAspectRatio="xMidYMax meet" fill="#1c0f07">
+                            <rect x="0" y="86" width="320" height="6"/>
+                            <!-- sol minare -->
+                            <rect x="40" y="34" width="5" height="52"/><path d="M39,36 Q42.5,20 46,36 Z"/><rect x="41.7" y="16" width="1.6" height="7"/>
+                            <!-- sağ minare -->
+                            <rect x="276" y="34" width="5" height="52"/><path d="M275,36 Q278.5,20 282,36 Z"/><rect x="277.7" y="16" width="1.6" height="7"/>
+                            <!-- yan yapılar -->
+                            <rect x="66" y="60" width="40" height="26"/><path d="M66,60 h40 l-20,-13 Z"/>
+                            <rect x="214" y="60" width="40" height="26"/><path d="M214,60 h40 l-20,-13 Z"/>
+                            <!-- ana cami -->
+                            <rect x="120" y="54" width="80" height="32"/>
+                            <path d="M126,54 C126,34 146,28 146,20 Q146,12 160,8 Q174,12 174,20 C174,28 194,34 194,54 Z"/>
+                            <rect x="158.7" y="2" width="2.6" height="8"/><circle cx="160" cy="2" r="2.4"/>
+                            <path d="M120,54 Q120,38 138,38 L138,54 Z"/><path d="M200,54 Q200,38 182,38 L182,54 Z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Namaz Vakitleri -->
+                <div id="prayer-times-container" class="prayer-grid"></div>
+
+                <!-- Özel gün şeridi: bayram namazı / kandil / Ramazan (yalnızca o günlerde) -->
+                <div id="ozel-gun-serit" class="ozel-serit" style="display:none;"></div>
+
+                <!-- Hızlı Erişim (v65.1): en çok kullanılan 4 bölüm, düzenlenebilir -->
+                <div id="hizli-erisim"></div>
+
+                <!-- Günün Âyeti / Hadisi — ekranın kalanını doldurur (v65.5: Diğer Vakitler kartı İmsakiye sayfasına taşındı) -->
+                <div class="daily-hadis-card" id="daily-ayet-card" onclick="nextDailyAyet()" title="Yeni âyet için dokun">
+                    <div class="ayet-ust">
+                        <div class="verse-card-title">📖 Günün Âyeti</div>
+                        <button class="mini-share-btn" onclick="shareDailyVerse(event)">📤 Paylaş</button>
+                    </div>
+                    <div id="daily-verse-arabic" class="hadis-arabic"></div>
+                    <div id="daily-verse-turkish" class="hadis-text">Yükleniyor...</div>
+                    <div id="daily-verse-source" class="hadis-source"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ 2. KURAN & DUA HUB ═══ -->
+        <section id="page-kurandua" class="page-section">
+            <div class="hero-frame-box">
+                <div class="page-header-title">
+                    <h2>📖 Kuran &amp; Dua</h2>
+                    <p>Kuran-ı Kerim, Dualar ve Zikirler</p>
+                </div>
+                <div class="hub-grid">
+                    <button class="hub-card" onclick="navigateTo('qibla')">
+                        <span class="hub-icon">🧭</span><span class="hub-title">Kıble Pusulası</span><span class="hub-sub">Canlı Yönlendirme</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('guide')">
+                        <span class="hub-icon">🤲</span><span class="hub-title">Namaz Rehberi</span><span class="hub-sub">5 Vaktin Kılınışı</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('namaz-nedir')">
+                        <span class="hub-icon">❓</span><span class="hub-title">Namaz Nedir?</span><span class="hub-sub">Niçin Kılınır, Farz, Sünnet, Kaza</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('kuran-nedir')">
+                        <span class="hub-icon">💡</span><span class="hub-title">Kur'an Nedir?</span><span class="hub-sub">Niçin ve Nasıl Okunur</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('quran')">
+                        <span class="hub-icon">📖</span><span class="hub-title">Kuran-ı Kerim</span><span class="hub-sub">Sayfa Sayfa • Sure Sure • Meal & Ses</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('dinle')">
+                        <span class="hub-icon">🎧</span><span class="hub-title">Kuran Dinle</span><span class="hub-sub">Kesintisiz • 10 Hafız</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('ezber')">
+                        <span class="hub-icon">🌱</span><span class="hub-title">Dua &amp; Sure Öğren</span><span class="hub-sub">Satır Satır Oku • Parça Parça Ezberle</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('elifba')">
+                        <span class="hub-icon">🔤</span><span class="hub-title">Elifbâ</span><span class="hub-sub">Kur'an Okumayı Öğren</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('tecvid')">
+                        <span class="hub-icon">🎓</span><span class="hub-title">Tecvid Dersleri</span><span class="hub-sub">Med, İdgam, İhfa… Kurallar</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('hatim')">
+                        <span class="hub-icon">📗</span><span class="hub-title">Hatim Takibi</span><span class="hub-sub">İlerleme Çubuğu</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('onemli-sureler')">
+                        <span class="hub-icon">⭐</span><span class="hub-title">Önemli Sureler</span><span class="hub-sub">Yâsîn, Mülk, Fetih… Faziletleri</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('ayet-arama')">
+                        <span class="hub-icon">🔎</span><span class="hub-title">Ayet & Meal Arama</span><span class="hub-sub">Kelimeyle ayet bul</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('ezkar')">
+                        <span class="hub-icon">🌅</span><span class="hub-title">Sabah/Akşam Ezkârı</span><span class="hub-sub">Günlük Zikirler</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('gunluk-dua')">
+                        <span class="hub-icon">📔</span><span class="hub-title">Günlük Dualar</span><span class="hub-sub">Yemek, Uyku, Yolculuk...</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('esma')">
+                        <span class="hub-icon">🕋</span><span class="hub-title">Esmaül Hüsna</span><span class="hub-sub">99 İsim & Anlamı</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('kirk-hadis')">
+                        <span class="hub-icon">📜</span><span class="hub-title">1000 Hadis</span><span class="hub-sub">Hadis-i Şerifler</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ 3. İBADET HUB ═══ -->
+        <section id="page-ibadet" class="page-section">
+            <div class="hero-frame-box">
+                <div class="page-header-title">
+                    <h2>🕌 İbadet</h2>
+                    <p>Namaz, Kıble ve İbadet Takipleri</p>
+                </div>
+                <div class="hub-grid">
+                    <button class="hub-card" onclick="navigateTo('namaz-programi')">
+                        <span class="hub-icon">🌱</span><span class="hub-title">30 Günde Namaz</span><span class="hub-sub">Sıfırdan Başlangıç Programı</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('zikirmatik')">
+                        <span class="hub-icon">📿</span><span class="hub-title">Zikirmatik</span><span class="hub-sub">Dijital Tesbih</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('namaz-takibi')">
+                        <span class="hub-icon">✅</span><span class="hub-title">Namaz Takibi</span><span class="hub-sub">5 Vakit & Haftalık Seri</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('kaza')">
+                        <span class="hub-icon">🔄</span><span class="hub-title">Kaza Namazı</span><span class="hub-sub">Borç Takibi</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('oruc')">
+                        <span class="hub-icon">🌙</span><span class="hub-title">Oruç Takibi</span><span class="hub-sub">Ramazan & Nafile • Seri</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('taharet')">
+                        <span class="hub-icon">💧</span><span class="hub-title">Abdest & Taharet</span><span class="hub-sub">Abdest, Gusül, Teyemmüm</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('ozel-namaz')">
+                        <span class="hub-icon">🕌</span><span class="hub-title">Özel Namazlar</span><span class="hub-sub">Vitir, Teheccüd, Cuma, Bayram…</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('iman')">
+                        <span class="hub-icon">📜</span><span class="hub-title">İman Esasları</span><span class="hub-sub">Âmentü & 6 Şart</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('peygamberler')">
+                        <span class="hub-icon">👳</span><span class="hub-title">Peygamberler</span><span class="hub-sub">Kur'an'daki 25 Nebi</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('siyer')">
+                        <span class="hub-icon">🌟</span><span class="hub-title">Siyer</span><span class="hub-sub">Peygamberimizin Hayatı</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('hac-umre')">
+                        <span class="hub-icon">🕋</span><span class="hub-title">Hac &amp; Umre</span><span class="hub-sub">Adım Adım Rehber &amp; Dualar</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('geceler')">
+                        <span class="hub-icon">🕯️</span><span class="hub-title">Kandil Rehberi</span><span class="hub-sub">Mübarek Gecelerde Ne Yapılır?</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ 4. ARAÇLAR HUB ═══ -->
+        <section id="page-araclar" class="page-section">
+            <div class="hero-frame-box">
+                <div class="page-header-title">
+                    <h2>🧰 Araçlar</h2>
+                    <p>Hesaplayıcılar, Quiz ve Faydalı Araçlar</p>
+                </div>
+                <div class="hub-grid">
+                    <button class="hub-card" onclick="navigateTo('zekat')">
+                        <span class="hub-icon">💰</span><span class="hub-title">Zekât &amp; Fitre</span><span class="hub-sub">Zekât, Fitre, Fidye Hesaplama</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('quiz')">
+                        <span class="hub-icon">🧠</span><span class="hub-title">İslami Bilgi Quizi</span><span class="hub-sub">50+ Soru</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('takvim')">
+                        <span class="hub-icon">📅</span><span class="hub-title">Hicri Takvim</span><span class="hub-sub">Kandiller, Bayramlar & Tarih Çevirici</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('imsakiye')">
+                        <span class="hub-icon">🌙</span><span class="hub-title">İmsakiye</span><span class="hub-sub">Sahur & İftar • Diğer Vakitler</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('paylasim')">
+                        <span class="hub-icon">📤</span><span class="hub-title">Paylaşım Kartları</span><span class="hub-sub">Ayet, Hadis & Cuma</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('sozluk')">
+                        <span class="hub-icon">📚</span><span class="hub-title">Dini Sözlük</span><span class="hub-sub">Kavramlar & Anlamları</span>
+                    </button>
+                    <button class="hub-card" onclick="navigateTo('bebek')">
+                        <span class="hub-icon">👶</span><span class="hub-title">Bebek İsimleri</span><span class="hub-sub">Anlamlarıyla</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ QIBLA SECTION (KUSURSUZ KIBLE NAVİGASYONU) ═══ -->
+        <section id="page-qibla" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title">
+                    <h2>🕋 Canlı Kıble Navigasyonu & Pusula</h2>
+                    <p id="qibla-user-loc">Yalova, Armutlu ➔ Mekke-i Mükerreme</p>
+                </div>
+
+                <div class="qibla-wrapper">
+                    <!-- Canlı Yönlendirme Rozeti -->
+                    <div id="qibla-direction-pill" class="qibla-pill turn-right">
+                        ➡️ Sağa Dön (158°)
+                    </div>
+
+                    <!-- Sabit Kâbe Hedefi (Üst 12 Yönü) ve Döner İbre Pusulası -->
+                    <div id="compass-interactive-box" class="compass-container">
+                        <!-- Sabit 12 Yönündeki Kâbe Hedefi -->
+                        <div class="fixed-top-qibla-target">
+                            <div class="qibla-target-kaaba">🕋</div>
+                            <div class="qibla-target-badge">HEDEF KÂBE</div>
+                        </div>
+
+                        <!-- Pusula Kadran Dairesi -->
+                        <div class="compass-dial-ring"></div>
+                        <div id="compass-dial" class="compass-inner-dial">
+                            <div class="compass-point n">K</div>
+                            <div class="compass-point e">D</div>
+                            <div class="compass-point s">G</div>
+                            <div class="compass-point w">B</div>
+                        </div>
+
+                        <!-- Dönünen Canlı Pusula İbresi -->
+                        <div id="compass-needle" class="dynamic-compass-needle">
+                            <div class="needle-gold-head">▲</div>
+                            <div class="needle-stem"></div>
+                            <div class="needle-pivot"></div>
+                        </div>
+                    </div>
+
+                    <!-- İstatistik Panel Kartları -->
+                    <div class="qibla-stats-row">
+                        <div class="stat-box">
+                            <div class="stat-label">Kıble Açınız</div>
+                            <div id="qibla-degree-val" class="stat-value">158° GD</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Kâbe Mesafesi</div>
+                            <div id="kaaba-dist-val" class="stat-value">2,385 km</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Pusula Yönü</div>
+                            <div id="compass-heading-val" class="stat-value">0°</div>
+                        </div>
+                    </div>
+
+                    <!-- Sensör Yeniden Başlat Butonu -->
+                    <div class="compass-control-bar">
+                        <button id="enable-compass-btn" class="gold-primary-btn">⚡ PUSULAYI BAŞLAT</button>
+                    </div>
+
+                    <!-- Manuel Döner Çark Slider -->
+                    <div class="manual-dial-wrap">
+                        <div class="manual-dial-label">👇 Parmağınızla veya kaydırıcı ile yönü ayarlayın:</div>
+                        <input type="range" id="manual-compass-slider" min="0" max="360" value="0" oninput="handleManualCompass(this.value)">
+                    </div>
+
+                    <!-- Kıble İnce Ayarı -->
+                    <div class="kible-ofset">
+                        <div class="kible-ofset-ust">
+                            <span>🎯 Kıble İnce Ayarı</span>
+                            <span id="kible-ofset-val" class="kible-ofset-deger">0°</span>
+                        </div>
+                        <input type="range" id="kible-ofset-slider" min="-30" max="30" step="1" value="0"
+                               oninput="hvKibleOfsetAyarla(this.value)">
+                        <div class="kible-ofset-alt">
+                            <span>−30°</span>
+                            <button class="kible-ofset-sifirla" onclick="hvKibleOfsetSifirla()">↺ Sıfırla</button>
+                            <span>+30°</span>
+                        </div>
+                        <div class="kible-ofset-not">Pusulanız bilinen kıble yönünden birkaç derece sapıyorsa buradan düzeltin. Ayarınız telefonunuzda saklanır.</div>
+                    </div>
+
+                    <button class="gold-outline-btn yakin-cami-btn" onclick="hvYakinCami()">🕌 Yakındaki Camileri Haritada Gör</button>
+
+                    <div id="compass-status-msg" class="compass-note">
+                        💡 <b>Nasıl Kullanılır?</b> Telefonunuzu düz tutun ve döner altın ibreyi en üstteki sabit 🕋 <b>KÂBE HEDEFİNE</b> getirene kadar dönün.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kıble İzin Onay Penceresi (Modal Prompt) -->
+            <div id="qibla-permission-modal" class="modal-backdrop-overlay" style="display: none;">
+                <div class="modal-dialog-card">
+                    <div class="modal-icon-badge">🕋</div>
+                    <h3>Kıble Yönü İzin Onayı</h3>
+                    <p>Kıblenin yönünü doğru bulabilmek için konum bilgisine ve telefon pusula sensörüne izin vermeniz gerekmektedir.</p>
+                    <div class="modal-actions" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <button class="modal-approve-btn" onclick="acceptQiblaPermissionFlow()">✅ DEVAM ET</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bildirim İzin Onay Penceresi (Modal Prompt) -->
+            <div id="notify-permission-modal" class="modal-backdrop-overlay" style="display: none;">
+                <div class="modal-dialog-card">
+                    <div class="modal-icon-badge">🔔</div>
+                    <h3>Bildirim Onayı</h3>
+                    <p>Namaz vakitleri için cihazınızdan bildirim almak istiyor musunuz?</p>
+                    <div class="modal-actions" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <button class="modal-approve-btn" onclick="acceptNotificationPermissionFlow()">✅ DEVAM ET</button>
+                        <button class="modal-approve-btn" onclick="document.getElementById('notify-permission-modal').style.display='none'" style="background: var(--bg-deep); color: var(--text-sub); border: 1px solid var(--border-soft); box-shadow: none;">Şimdilik Geç</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ QURAN SECTION ═══ -->
+        <section id="page-quran" class="page-section">
+            <div class="hero-frame-box">
+                <div id="surah-list-view">
+                    <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                    <div class="page-header-title">
+                        <h2>📖 Kuran-ı Kerim</h2>
+                        <p>Arapça Metin ve Türkçe Meali</p>
+                    </div>
+                    <div class="qmode">
+                        <button onclick="hvKuranModu('sayfa')">📜 Sayfa Sayfa</button>
+                        <button class="on">📖 Sure Sure</button>
+                    </div>
+                    <div id="quran-tools" class="quran-tools"></div>
+                    <div class="quran-search-bar">
+                        <span class="search-icon-fixed">🔍</span>
+                        <input type="text" id="surah-search-input" class="search-input-field" placeholder="Sure ara (ör. Fatiha, Yasin)...">
+                    </div>
+                    <div id="surah-list-wrap" class="surah-list-wrap"></div>
+                </div>
+                <div id="surah-detail-view" style="display: none;">
+                    <div class="detail-toolbar">
+                        <button id="back-to-surahs" class="back-btn"><span>←</span> Sure Listesi</button>
+                        <div class="font-size-adjuster">
+                            <button id="font-decrease" class="font-btn">A-</button>
+                            <span id="font-size-val">20px</span>
+                            <button id="font-increase" class="font-btn">A+</button>
+                        </div>
+                    </div>
+
+                    <div class="audio-player-card" style="background: var(--bg-card); border: 1px solid var(--border-gold); border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                            <div style="font-size: 0.9rem; color: var(--gold-light); font-weight: 600;">🎙️ Sesli Dinle</div>
+                            <select id="qari-select" style="background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border-light); border-radius: 6px; padding: 4px; font-size: 0.8rem; outline: none; cursor: pointer;">
+                            <option value="husr" data-server="server13">Mahmud Halil el-Husarî</option>
+                            <option value="afs" data-server="server8">Mishary Rashid Alafasy</option>
+                            <option value="minsh" data-server="server10">Muhammed Sıddık el-Minşâvî</option>
+                            <option value="yasser" data-server="server11">Yâsir ed-Devserî</option>
+                            <option value="alfaqih" data-server="server16" data-path="M_Alfaqih/Rewayat-Hafs-A-n-Assem">Muhammed el-Fakih</option>
+                            <option value="mousa" data-server="server14" data-path="mousa/Rewayat-Hafs-A-n-Assem">Abdullah el-Mûsâ</option>
+                            <option value="basit" data-server="server7">Abdülbâsıt Abdüssamed</option>
+                            <option value="sds" data-server="server11">Abdurrahman es-Sudeys</option>
+                            <option value="s_gmd" data-server="server7">Saad el-Ğâmidî</option>
+                            <option value="maher" data-server="server12">Mâhir el-Muaykılî</option>
+                        </select>
+                        </div>
+                        <audio id="surah-audio-player" controls style="width: 100%; height: 36px; outline: none; border-radius: 20px;"></audio>
+                    </div>
+
+                    <div id="surah-header-card" class="surah-detail-header-card"></div>
+                    <div id="ayah-list-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ MUSHAF (SAYFA SAYFA) ═══ -->
+        <section id="page-mushaf" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div id="mushaf-root"></div>
+            </div>
+        </section>
+
+        <!-- ═══ ELİFBÂ ═══ -->
+        <section id="page-elifba" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div id="elifba-root"></div>
+            </div>
+        </section>
+
+        <section id="page-tecvid" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>🎓 Tecvid Dersleri</h2><p>Kur'an'ı kurallarına göre okuma — 14 ders</p></div>
+                <div id="tecvid-content"></div>
+            </div>
+        </section>
+
+        <!-- ═══ KURAN DİNLE ═══ -->
+        <section id="page-dinle" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div id="dinle-root"></div>
+            </div>
+        </section>
+
+        <!-- ═══ DUA & SURE EZBERLEME ═══ -->
+        <section id="page-ezber" class="page-section">
+            <div class="hero-frame-box">
+                <div class="sd-ust">
+                    <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                    <div class="share-type-switch ogren-mod">
+                        <button class="seg-btn" onclick="navigateTo('sifirdan')">📖 Oku</button>
+                        <button class="seg-btn active">🧠 Ezberle</button>
+                    </div>
+                </div>
+                <div id="ezber-root"></div>
+            </div>
+        </section>
+
+        <!-- ═══ PRAYER GUIDE SECTION ═══ -->
+        <section id="page-guide" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title">
+                    <h2>🤲 Rehber</h2>
+                    <p>5 Vakit Namazın Kılınışı & Dualar</p>
+                </div>
+                <button class="nn-link" onclick="_nnBolum = 0; navigateTo('namaz-nedir')">❓ Namaz nedir, niçin kılınır? Farz ve sünnet ne demek? →</button>
+                <div class="guide-tabs-scroller">
+                    <div id="prayer-pill-bar" class="prayer-type-pill-bar"></div>
+                </div>
+                <div id="rakat-summary-box" class="rakat-summary-box"></div>
+
+                <!-- Rehber İçi Görünüm Seçici (Kılınış vs Dualar) -->
+                <div id="guide-view-switcher" class="guide-view-switcher">
+                    <button id="guide-tab-steps" class="guide-switch-btn active" onclick="switchGuideViewMode('steps')">📍 Kılınış Adımları</button>
+                    <button id="guide-tab-duas" class="guide-switch-btn" onclick="switchGuideViewMode('duas')">📿 Okunan Dualar & Sureler</button>
+                    <button id="guide-tab-all" class="guide-switch-btn" onclick="switchGuideViewMode('all')">📋 Tümünü Göster</button>
+                </div>
+
+                <div id="prayer-steps-wrap"></div>
+                <div id="duas-wrap" class="duas-container-section"></div>
+            </div>
+        </section>
+
+        <!-- ═══ FEATURE SUB-PAGES (İçerik features.js tarafından doldurulur) ═══ -->
+        <section id="page-onemli-sureler" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>⭐ Önemli Sureler</h2><p>Faziletli sureler için hızlı erişim</p></div>
+                <div id="onemli-sureler-content"></div>
+            </div>
+        </section>
+
+        <section id="page-sifirdan" class="page-section">
+            <div class="hero-frame-box">
+                <div id="sifirdan-root"></div>
+            </div>
+        </section>
+
+
+        <section id="page-esma" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>🕋 Esmaül Hüsna</h2><p>Allah'ın 99 Güzel İsmi</p></div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="esma-search-input" class="search-input-field" placeholder="İsim ara (ör. Rahman, Kerim)...">
+                </div>
+                <div id="esma-content"></div>
+            </div>
+        </section>
+
+        <section id="page-ezkar" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>🌅 Sabah / Akşam Ezkârı</h2><p>Günlük Zikir ve Dualar</p></div>
+                <div class="segmented-switch" id="ezkar-switch">
+                    <button class="seg-btn active" onclick="switchEzkar('sabah')">🌅 Sabah</button>
+                    <button class="seg-btn" onclick="switchEzkar('aksam')">🌆 Akşam</button>
+                </div>
+                <div id="ezkar-content"></div>
+            </div>
+        </section>
+
+        <section id="page-gunluk-dua" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>📔 Günlük Dualar</h2><p>Günlük hayatın duaları</p></div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="gunluk-search-input" class="search-input-field" placeholder="Dua ara (ör. yemek, uyku)...">
+                </div>
+                <div id="gunluk-dua-content"></div>
+            </div>
+        </section>
+
+        <section id="page-zikirmatik" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>📿 Zikirmatik</h2><p>Dijital Tesbih</p></div>
+                <div id="zikirmatik-content"></div>
+            </div>
+        </section>
+
+        <section id="page-namaz-takibi" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>✅ Namaz Takibi</h2><p>Günlük 5 vakit ve haftalık seri</p></div>
+                <div id="namaz-takibi-content"></div>
+            </div>
+        </section>
+
+        <section id="page-namaz-programi" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🌱 30 Günde Namaza Başlangıç</h2><p>Sıfırdan adım adım namaz öğrenme programı</p></div>
+                <div id="namaz-programi-content"></div>
+            </div>
+        </section>
+
+        <section id="page-kaza" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🔄 Kaza Namazı Takibi</h2><p>Kaza borcunuzu takip edin</p></div>
+                <button class="nn-link" onclick="_nnBolum = 2; navigateTo('namaz-nedir')">❓ Kaza nedir, nasıl kılınır? →</button>
+                <div id="kaza-content"></div>
+            </div>
+        </section>
+
+        <section id="page-hatim" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>📗 Hatim Takibi</h2><p>Kuran hatmi ilerlemeniz</p></div>
+                <div id="hatim-content"></div>
+            </div>
+        </section>
+
+        <section id="page-zekat" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>💰 Zekât &amp; Fitre</h2><p>Zekât, fitre ve fidye hesaplama</p></div>
+                <div class="share-type-switch" id="zf-switch">
+                    <button class="seg-btn active" id="zf-zekat" onclick="zfSec('zekat')">💰 Zekât</button>
+                    <button class="seg-btn" id="zf-fitre" onclick="zfSec('fitre')">🌾 Fitre / Fidye</button>
+                </div>
+                <div id="zekat-content"></div>
+                <div id="fitre-content" style="display:none"></div>
+            </div>
+        </section>
+
+
+        <section id="page-quiz" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>🧠 İslami Bilgi Quizi</h2><p>Bilgini test et</p></div>
+                <div id="quiz-content"></div>
+            </div>
+        </section>
+
+
+        <section id="page-bebek" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>👶 Bebek İsimleri</h2><p>Anlamlı isimler</p></div>
+                <div class="segmented-switch" id="bebek-switch">
+                    <button class="seg-btn active" onclick="switchBebek('all')">Tümü</button>
+                    <button class="seg-btn" onclick="switchBebek('erkek')">👦 Erkek</button>
+                    <button class="seg-btn" onclick="switchBebek('kiz')">👧 Kız</button>
+                </div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="bebek-search-input" class="search-input-field" placeholder="İsim ara...">
+                </div>
+                <div id="bebek-content"></div>
+            </div>
+        </section>
+
+        <section id="page-takvim" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>📅 Hicri Takvim</h2><p>Kandiller, bayramlar ve tarih çevirici</p></div>
+                <div class="share-type-switch" id="tk-switch">
+                    <button class="seg-btn active" id="tk-takvim" onclick="tkSec('takvim')">📅 Takvim</button>
+                    <button class="seg-btn" id="tk-cevirici" onclick="tkSec('cevirici')">🔄 Tarih Çevirici</button>
+                </div>
+                <div id="takvim-content"></div>
+                <div id="cevirici-content" style="display:none"></div>
+            </div>
+        </section>
+
+        <section id="page-paylasim" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>📤 Paylaşım Kartları</h2><p>Ayet, hadis ve Cuma mesajı kartları</p></div>
+                <div id="paylasim-content"></div>
+            </div>
+        </section>
+
+
+        <!-- ═══ YENİ MODÜL SAYFALARI (v55.2) ═══ -->
+        <section id="page-taharet" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>💧 Abdest & Taharet Rehberi</h2><p>Adım adım kılınışı</p></div>
+                <div class="segmented-switch" id="taharet-switch">
+                    <button class="seg-btn active" data-k="abdest" onclick="switchTaharet('abdest')">Abdest</button>
+                    <button class="seg-btn" data-k="gusul" onclick="switchTaharet('gusul')">Gusül</button>
+                    <button class="seg-btn" data-k="teyemmum" onclick="switchTaharet('teyemmum')">Teyemmüm</button>
+                </div>
+                <div id="taharet-content"></div>
+            </div>
+        </section>
+
+        <section id="page-ozel-namaz" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🕌 Özel Namazlar</h2><p>Cuma, Bayram, Teravih, Cenaze</p></div>
+                <div id="ozel-namaz-content"></div>
+            </div>
+        </section>
+
+        <section id="page-iman" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>📜 İman Esasları</h2><p>Âmentü ve İmanın 6 Şartı</p></div>
+                <div id="iman-content"></div>
+            </div>
+        </section>
+
+        <section id="page-ayet-arama" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>🔎 Ayet & Meal Arama</h2><p>Kur'an mealinde kelime arayın</p></div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="ayet-search-input" class="search-input-field" placeholder="Kelime yazın (ör. sabır, rahmet, namaz)...">
+                </div>
+                <div id="ayet-arama-content"></div>
+            </div>
+        </section>
+
+        <section id="page-kirk-hadis" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>📜 1000 Hadis-i Şerif</h2><p id="kirk-hadis-count">Buhârî, Müslim, Tirmizî, Ebû Dâvûd, Nesâî, İbn Mâce, Riyâzü's-Sâlihîn</p></div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="hadis-search-input" class="search-input-field" placeholder="1000 hadiste ara (ör. niyet, komşu, sabır)...">
+                </div>
+                <div id="kirk-hadis-content"></div>
+            </div>
+        </section>
+
+        <section id="page-namaz-nedir" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>❓ Namaz Nedir?</h2><p>Niçin kılınır · Farz, sünnet, nafile · Kaza · Peygamberimizin uygulaması</p></div>
+                <div id="namaz-nedir-content"></div>
+            </div>
+        </section>
+
+        <section id="page-kuran-nedir" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('kurandua')">← Kuran &amp; Dua</button>
+                <div class="page-header-title"><h2>💡 Kur'an Nedir?</h2><p>Nedir · Niçin okunur · Nasıl okunur · Peygamberimiz ve Kur'an</p></div>
+                <div id="kuran-nedir-content"></div>
+            </div>
+        </section>
+
+        <section id="page-hac-umre" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🕋 Hac &amp; Umre</h2><p>Adım adım rehber, dualar ve pratik bilgiler</p></div>
+                <div id="hac-umre-content"></div>
+            </div>
+        </section>
+
+        <section id="page-geceler" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🕯️ Kandil Rehberi</h2><p>Mübarek gecelerde ne yapılır, hangi dualar okunur?</p></div>
+                <div id="geceler-content"></div>
+            </div>
+        </section>
+
+        <section id="page-siyer" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🌟 Siyer</h2><p>Peygamberimizin Hayatı</p></div>
+                <div id="siyer-content"></div>
+            </div>
+        </section>
+
+        <section id="page-peygamberler" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>👳 Peygamberler</h2><p>Kur'an'da adı geçen 25 peygamber</p></div>
+                <div id="peygamberler-content"></div>
+            </div>
+        </section>
+
+        <section id="page-sozluk" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>📚 Dini Sözlük</h2><p>İslami kavramlar ve anlamları</p></div>
+                <div class="quran-search-bar">
+                    <span class="search-icon-fixed">🔍</span>
+                    <input type="text" id="sozluk-search-input" class="search-input-field" placeholder="Kavram ara (ör. takva, nisab)...">
+                </div>
+                <div id="sozluk-content"></div>
+            </div>
+        </section>
+
+        <section id="page-oruc" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('ibadet')">← İbadet</button>
+                <div class="page-header-title"><h2>🌙 Oruç Takibi</h2><p>Ramazan ve nafile oruçlarınız</p></div>
+                <div id="oruc-content"></div>
+            </div>
+        </section>
+
+        <section id="page-imsakiye" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('araclar')">← Araçlar</button>
+                <div class="page-header-title"><h2>🌙 İmsakiye &amp; Vakitler</h2><p>Aylık sahur-iftar çizelgesi ve bugünün diğer vakitleri</p></div>
+                <!-- Bugünün diğer vakitleri: İşrak / Kuşluk / Kerahet / Gece yarısı / Teheccüd + paylaş (v65.5: ana sayfadan buraya taşındı) -->
+                <div class="ek-vakit-kart sabit" id="ek-vakit-kart" style="display:none;">
+                    <div class="ek-vakit-ust">
+                        <span class="ek-vakit-baslik">⏱ Bugünün Diğer Vakitleri <small>İşrak · Kuşluk · Kerahet · Teheccüd</small></span>
+                    </div>
+                    <div class="ek-vakit-govde" id="ek-vakit-govde">
+                        <div class="ek-vakit-satirlar" id="ek-vakit-satirlar"></div>
+                        <button class="ek-vakit-paylas" onclick="hvVakitleriPaylas()">📤 Bugünün Vakitlerini Paylaş</button>
+                    </div>
+                </div>
+                <div id="imsakiye-content"></div>
+            </div>
+        </section>
+
+        <section id="page-kaynaklar" class="page-section">
+            <div class="hero-frame-box">
+                <button class="hub-back-btn" onclick="hvGeri('settings')">← Ayarlar</button>
+                <div class="page-header-title"><h2>📚 Kaynaklar &amp; Gizlilik</h2><p>İçerik kaynakları, yöntem ve veri politikası</p></div>
+                <div class="kaynak-wrap">
+                    <div class="kaynak-card">
+                        <h3>🕰️ Namaz Vakitleri</h3>
+                        <p>Türkiye'de vakitler, <b>Diyanet İşleri Başkanlığı'nın yayımladığı resmî namaz vakti tablolarından</b> doğrudan alınır — hesaplanmaz. Seçtiğiniz ilçenin yaklaşık bir aylık vakti cihazınıza kaydedilir, azaldıkça arka planda kendiliğinden yenilenir; böylece <b>internet olmadan da</b> doğru vakitleri görürsünüz. Diyanet'in ilçe listesinde ayrıca yer almayan yerleşimlerde bağlı olduğu il/ilçe merkezinin resmî vakti kullanılır. Yurt dışı konumlarda ve resmî tabloya ulaşılamadığı durumlarda Diyanet hesaplama yöntemi (Aladhan API, method 13) yedek olarak devreye girer; bu yedekte akşam ve yatsıya +1 dk temkin uygulanır. <b>Ayarlar → Vakit İnce Ayarı</b> bölümünden her vakti ±15 dk düzeltebilirsiniz. Resmî kaynak için <b>namazvakitleri.diyanet.gov.tr</b> adresini esas alınız.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>📖 Kur'an-ı Kerim ve Meal</h3>
+                        <p>Arapça metin <b>Osmanî (Hafs) mushaf</b> yazımıdır; harf ve kelime olarak Diyanet İşleri Başkanlığı mushafıyla aynıdır. Türkçe meal, <b>Diyanet İşleri Başkanlığı Kur'an-ı Kerim Meâli</b>'nin resmî yayınından alınmış olup <b>6236 âyetin tamamı uygulamanın içindedir</b>; internet olmadan da okunabilir. Türkçe okunuş (latin harfli) Al Quran Cloud (alquran.cloud) açık veri servisinden, Arapça metin aynı servisten alınır; yedek kaynak <b>Açık Kuran (acikkuran.com)</b>'dur. Sure açıklamaları ve okunuşlar Diyanet yayınlarından derlenmiştir.</p>
+                        <p class="kaynak-note">ℹ️ Diyanet meâlinde bazı âyetler birleştirilerek çevrilmiştir (ör. "1-5"). Uygulama bu âyetleri Diyanet'in yaptığı gibi tek metin hâlinde ve numara aralığıyla gösterir.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>📜 Mushaf (Sayfa Sayfa Okuma)</h3>
+                        <p>Sayfa düzeni, dünya genelinde kullanılan <b>604 sayfalık Medine (Osmanî) mushaf</b> numaralandırmasıdır. Sayfa verileri alquran.cloud servisinden alınır; okuduğunuz sayfalar cihazınıza kaydedilir ve internetsiz de açılır. Sûre araması, her sûrenin bu düzendeki başlangıç sayfasını verir.</p>
+                        <p class="kaynak-note">ℹ️ Diyanet İşleri Başkanlığı'nın Türkiye'de bastığı mushaf da 604 sayfadır; ancak satır ve sayfa sonları biraz farklıdır. Bu yüzden bazı bölümlerde sayfa numarası, elinizdeki basılı Diyanet mushafına göre <b>1 sayfa kayabilir</b>. Âyet metinlerinde fark yoktur.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>🎧 Kuran Dinle</h3>
+                        <p>Sesli okuyuşlar <b>mp3quran.net</b> ve <b>everyayah.com</b> üzerinden sunulur: Mahmud Halil el-Husarî, Mishary Rashid Alafasy, Muhammed Sıddık el-Minşâvî, Yâsir ed-Devserî, Muhammed el-Fakih, Abdullah el-Mûsâ, Abdülbâsıt Abdüssamed, Abdurrahman es-Sudeys, Saad el-Ğâmidî, Mâhir el-Muaykılî. Kayıtlar ilgili hâfızlara aittir; uygulama yalnızca yayın bağlantısını kullanır.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>🔤 Elifbâ</h3>
+                        <p>Harflerin adları, sesleri, kalın–ince ayrımı ve hareke açıklamaları <b>genel elifbâ öğretimi bilgisidir</b>; yaygın elifbâ kitaplarındaki anlatıma dayanır. Harflerin başta, ortada ve sonda yazılışları yazı sistemi tarafından otomatik oluşturulur.</p>
+                        <p class="kaynak-note">⚠️ Bu bölüm <b>Diyanet İşleri Başkanlığı kaynaklı değildir</b>; tanıtıcı ve öğretici amaçlıdır. Kur'an okumayı bir hocadan veya Kur'an kursundan öğrenmeniz, telaffuzun (tecvid) doğru oturması için gereklidir.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>📜 Hadisler</h3>
+                        <p>Günlük hadisler ve 1000 Hadis bölümü <b>Sahih-i Buhârî, Sahih-i Müslim, Sünen-i Tirmizî, Sünen-i Ebû Dâvûd, Sünen-i Nesâî, Sünen-i İbn Mâce, Muvatta ve Riyâzü's-Sâlihîn</b> gibi muteber kaynaklardan seçilmiş, her hadisin altında kaynağı belirtilmiştir. Türkçe çeviriler Diyanet İşleri Başkanlığı "Hadislerle İslâm" ve Riyâzü's-Sâlihîn tercümeleri esas alınarak sadeleştirilmiştir.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>🤲 Dualar, Zikirler ve Esmâü'l-Hüsnâ</h3>
+                        <p>Sabah–akşam zikirleri (Hısnü'l-Müslim / Kale-i Müslim derlemesi), günlük dualar ve Esmâü'l-Hüsnâ açıklamaları Diyanet İşleri Başkanlığı "Dualar" ve "Esmâ-i Hüsnâ" yayınlarına dayanır. Arapça metinler, Türkçe okunuşları ve anlamları birlikte verilmiştir.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>🧭 Kıble, Zekât ve Fitre</h3>
+                        <p>Kıble açısı Kâbe koordinatlarına (21.4225° K, 39.8262° D) göre büyük daire hesabıyla bulunur; cihaz pusulası manyetik alandan etkilenebilir, ilk kullanımda pusulayı 8 çizerek kalibre edin. Zekât hesaplaması Hanefî ölçütlerine (nisap: 80,18 gr altın; oran %2,5) göre yapılır. Fitre miktarı her yıl Diyanet tarafından ilân edilir; uygulamadaki tutarı güncel değerle karşılaştırınız.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>📚 Diğer İçerikler</h3>
+                        <p>İman esasları, abdest/gusül/teyemmüm rehberi, özel namazlar, peygamberler ve siyer bölümleri <b>Diyanet İlmihali</b> ve <b>TDV İslâm Ansiklopedisi</b> esas alınarak hazırlanmıştır. Dinî sözlük TDV İslâm Ansiklopedisi tanımlarına dayanır.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>🔒 Gizlilik Politikası</h3>
+                        <p>Namaz Dostu <b>hesap açmanızı istemez, kişisel verinizi toplamaz ve hiçbir sunucuya göndermez</b>. Konumunuz yalnızca vakit hesabı için kullanılır; seçtiğiniz il/ilçe koordinatları ve GPS konumu sadece cihazınızda saklanır. Zikir sayaçları, namaz/oruç takibi, hatim, yer imleri ve ayarlar cihazınızın yerel depolamasında tutulur; "Yedekleme" ile dışa aktarabilir, istediğiniz an tarayıcı verilerini silerek tümünü kaldırabilirsiniz. Uygulama reklam, analitik veya takip kodu içermez. Vakit ve Kur'an verileri için üçüncü taraf servislere (ezanvakti.emushaf.net, aladhan.com, alquran.cloud, acikkuran.com, everyayah.com, mp3quran.net) yalnızca ilgili isteğin gerektirdiği konum/sure bilgisi gönderilir.</p>
+                    </div>
+                    <div class="kaynak-card">
+                        <h3>✉️ Hata Bildirimi ve Öneri</h3>
+                        <p>Bir içerik hatası, yanlış kaynak ya da eksik gördüğünüz bir bölüm varsa lütfen bildirin. İçeriklerin doğruluğu için azami özen gösterilmekle birlikte, dinî konularda nihai başvuru kaynağınız Diyanet İşleri Başkanlığı ve yetkin ilim ehli olmalıdır.</p>
+                        <div class="backup-row"><button class="gold-outline-btn" onclick="hvSendFeedback()">📝 Geri Bildirim Gönder</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SETTINGS SECTION ═══ -->
+        <section id="page-settings" class="page-section">
+            <div class="hero-frame-box">
+                <div class="page-header-title">
+                    <h2>⚙️ Ayarlar</h2>
+                    <p>Konum ve Uygulama Tercihleri</p>
+                </div>
+                <div class="settings-group-wrapper">
+                    <div class="settings-group">
+                        <div class="group-title">📍 Şehir ve İlçe Seçimi</div>
+                        <div class="settings-card-box">
+                            <div class="setting-row">
+                                <label for="city-select">İl</label>
+                                <select id="city-select" class="select-input"></select>
+                            </div>
+                            <div class="setting-row">
+                                <label for="district-select">İlçe</label>
+                                <select id="district-select" class="select-input"></select>
+                            </div>
+                            <div class="action-row">
+                                <button id="auto-gps-btn" class="gold-primary-btn">📍 Otomatik GPS Konumu Al</button>
+                                <div id="location-status-msg"></div>
+                                <p class="loc-note">ℹ️ GPS kullandığında vakitler <strong>tam bulunduğun noktaya</strong> göre hesaplanır. Üstte yazan ilçe adı sadece en yakın ilçenin etiketidir; mahalleler arası fark saniyeler mertebesindedir. Vakitler Diyanet İşleri Başkanlığı yöntemiyle hesaplanır.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="group-title">🕰️ Vakit İnce Ayarı (dakika)</div>
+                        <div class="settings-card-box">
+                            <div class="offset-hint">Vakitler Diyanet yöntemiyle hesaplanır ve aylık olarak cihazınıza kaydedilir (internetsiz de çalışır). Yerel takviminizle 1-2 dk fark görürseniz buradan düzeltin. Aralık: -15 … +15 dk.</div>
+                            <div class="offset-grid">
+                                <label class="offset-cell"><span>İmsak</span><input type="number" class="offset-input" data-k="Fajr" min="-15" max="15" step="1" value="0"></label>
+                                <label class="offset-cell"><span>Güneş</span><input type="number" class="offset-input" data-k="Sunrise" min="-15" max="15" step="1" value="0"></label>
+                                <label class="offset-cell"><span>Öğle</span><input type="number" class="offset-input" data-k="Dhuhr" min="-15" max="15" step="1" value="0"></label>
+                                <label class="offset-cell"><span>İkindi</span><input type="number" class="offset-input" data-k="Asr" min="-15" max="15" step="1" value="0"></label>
+                                <label class="offset-cell"><span>Akşam</span><input type="number" class="offset-input" data-k="Maghrib" min="-15" max="15" step="1" value="1"></label>
+                                <label class="offset-cell"><span>Yatsı</span><input type="number" class="offset-input" data-k="Isha" min="-15" max="15" step="1" value="1"></label>
+                            </div>
+                            <div class="action-row">
+                                <button id="offset-reset-btn" class="gold-outline-btn">↺ Varsayılana Dön</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="group-title">🔔 Bildirim Ayarları</div>
+                        <div class="settings-card-box">
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="notify-toggle" style="margin: 0; font-weight: 600;">Vakit Bildirimleri</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notify-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <label for="notify-time">Bildirim Zamanı</label>
+                                <select id="notify-time" class="select-input">
+                                    <option value="0">Tam vaktinde</option>
+                                    <option value="15">15 dakika kala</option>
+                                    <option value="30">30 dakika kala</option>
+                                    <option value="45">45 dakika kala</option>
+                                </select>
+                            </div>
+                            <div class="setting-row">
+                                <label for="notify-sound">Bildirim Türü</label>
+                                <select id="notify-sound" class="select-input">
+                                    <option value="silent">Sessiz (Sadece Ekranda)</option>
+                                    <option value="beep">Sesli (Kısa Zil)</option>
+                                    <option value="ezan">Sesli (Gerçek Ezan)</option>
+                                </select>
+                            </div>
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="notify-both" style="margin: 0; font-weight: 600;">Hem önceden hem vaktinde
+                                    <span style="display:block;font-weight:400;font-size:.78rem;color:var(--text-sub);margin-top:3px;">Açıkken iki bildirim gelir: önce hatırlatma, sonra vakit girince ezan</span>
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notify-both">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="notify-cuma" style="margin: 0; font-weight: 600;">Cuma hatırlatması
+                                    <span style="display:block;font-weight:400;font-size:.78rem;color:var(--text-sub);margin-top:3px;">Cuma sabahı Kehf suresi ve salavat hatırlatması</span>
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notify-cuma">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="notify-kandil" style="margin: 0; font-weight: 600;">Kandil &amp; bayram hatırlatması
+                                    <span style="display:block;font-weight:400;font-size:.78rem;color:var(--text-sub);margin-top:3px;">Kandil, bayram, arefe ve Ramazan başlangıcında sabah bildirimi</span>
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notify-kandil">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="notify-ayet" style="margin: 0; font-weight: 600;">Sabah Günün Âyeti
+                                    <span style="display:block;font-weight:400;font-size:.78rem;color:var(--text-sub);margin-top:3px;">Her sabah seçtiğin saatte günün âyeti (Diyanet meali) bildirim olarak gelir</span>
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="notify-ayet">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <label for="notify-ayet-saat">Günün Âyeti Saati</label>
+                                <select id="notify-ayet-saat" class="select-input">
+                                    <option value="6">06:00</option>
+                                    <option value="7">07:00</option>
+                                    <option value="8">08:00</option>
+                                    <option value="9">09:00</option>
+                                    <option value="10">10:00</option>
+                                    <option value="12">12:00</option>
+                                    <option value="20">20:00</option>
+                                </select>
+                            </div>
+                            <div id="notify-native-status" class="notify-status"></div>
+                            <div class="backup-row">
+                                <button id="test-adhan-btn" class="gold-primary-btn" onclick="testAdhanSound()">🔊 Ezanı Test Et</button>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; padding: 0 14px 12px;">* Bildirim gelmiyorsa telefon Ayarlar → Bildirimler → Namaz Dostu'dan izni aç. Ses seçimi "Gerçek Ezan" ise uygulama kapalıyken de ezan sesiyle bildirim gelir.</div>
+                        </div>
+                    </div>
+                    <!-- v66.4: Sabah ezanı alarmı -->
+                    <div class="settings-group" id="sabah-ezani-grup">
+                        <div class="group-title">⏰ Sabah Ezanı Alarmı</div>
+                        <div class="settings-card-box">
+                            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <label for="sabah-alarm-toggle" style="margin: 0; font-weight: 600;">Sabah ezanıyla uyan
+                                    <span style="display:block;font-weight:400;font-size:.78rem;color:var(--text-sub);margin-top:3px;">Seçtiğin saatte ezan sesiyle bildirim gelir — uygulama kapalıyken de. Saat, o günün İmsak ile Güneş arasına sığdırılır.</span>
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="sabah-alarm-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" id="sabah-alarm-saat-row">
+                                <label for="sabah-alarm-saat">Alarm Saati</label>
+                                <input type="time" id="sabah-alarm-saat" class="select-input sa-saat" value="06:30" step="60">
+                            </div>
+                            <div id="sabah-alarm-bilgi" class="sa-bilgi"></div>
+                            <div class="backup-row">
+                                <button class="gold-outline-btn" onclick="testAdhanSound()">🔊 Ezan sesini dinle</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <div class="group-title">🎙️ Ses ve Okuma</div>
+                        <div class="settings-card-box">
+                            <div class="setting-row">
+                                <label for="settings-qari-select">Hafız (Kuran Oku, Kuran Dinle)</label>
+                                <select id="settings-qari-select" class="select-input">
+                                    <option value="husr">Mahmud Halil el-Husarî</option>
+                                    <option value="afs">Mishary Rashid Alafasy</option>
+                                    <option value="minsh">Muhammed Sıddık el-Minşâvî</option>
+                                    <option value="yasser">Yâsir ed-Devserî</option>
+                                    <option value="alfaqih">Muhammed el-Fakih</option>
+                                    <option value="mousa">Abdullah el-Mûsâ</option>
+                                    <option value="basit">Abdülbâsıt Abdüssamed</option>
+                                    <option value="sds">Abdurrahman es-Sudeys</option>
+                                    <option value="s_gmd">Saad el-Ğâmidî</option>
+                                    <option value="maher">Mâhir el-Muaykılî</option>
+                                </select>
+                            </div>
+                            <div class="setting-row">
+                                <label for="settings-ogren-qari-select">Dua &amp; Sure Öğren hocası</label>
+                                <select id="settings-ogren-qari-select" class="select-input">
+                                    <option value="alfaqih">Muhammed el-Fakih</option>
+                                    <option value="husr">Mahmud Halil el-Husarî</option>
+                                    <option value="afs">Mishary Rashid Alafasy</option>
+                                    <option value="minsh">Muhammed Sıddık el-Minşâvî</option>
+                                    <option value="yasser">Yâsir ed-Devserî</option>
+                                    <option value="mousa">Abdullah el-Mûsâ</option>
+                                    <option value="basit">Abdülbâsıt Abdüssamed</option>
+                                    <option value="sds">Abdurrahman es-Sudeys</option>
+                                    <option value="s_gmd">Saad el-Ğâmidî</option>
+                                    <option value="maher">Mâhir el-Muaykılî</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="group-title">🎨 Görünüm</div>
+                        <div class="settings-card-box">
+                            <div class="setting-row">
+                                <label for="light-toggle">☀️ Gündüz Teması (açık renk)</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="light-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <label for="big-text-toggle">🔍 Büyük Yazı (yaşlılar için)</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="big-text-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <label for="theme-toggle">Yeşil Tema (Lüks Gece)</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="theme-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row range-row">
+                                <label for="font-size-slider">Kuran Metin Boyutu</label>
+                                <input type="range" id="font-size-slider" min="14" max="36" value="20">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="group-title">💾 Yedekleme</div>
+                        <div class="settings-card-box">
+                            <div class="offset-hint">Zikir sayaçları, namaz/oruç/kaza takibi, hatim, yer imleri, ayarlar… tümünü tek bir dosyaya kaydedin; yeni telefonda geri yükleyin.</div>
+                            <div class="backup-row">
+                                <button id="backup-export-btn" class="gold-primary-btn" onclick="hvBackupExport()">📤 Yedeği İndir</button>
+                                <button id="backup-import-btn" class="gold-outline-btn" onclick="document.getElementById('backup-file-input').click()">📥 Yedeği Geri Yükle</button>
+                                <input type="file" id="backup-file-input" accept="application/json,.json" style="display:none" onchange="hvBackupImport(this)">
+                            </div>
+                            <div id="backup-status" class="backup-status"></div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="group-title">ℹ️ Hakkında</div>
+                        <div class="settings-card-box">
+                            <div class="backup-row">
+                                <button class="gold-primary-btn" onclick="hvRateNow()">⭐ Uygulamayı Puanla</button>
+                                <button class="gold-outline-btn" onclick="navigateTo('kaynaklar')">📚 Kaynaklar &amp; Gizlilik</button>
+                                <button class="gold-outline-btn" onclick="hvShareApp()">📲 Uygulamayı Paylaş</button>
+                                <button class="gold-outline-btn" onclick="hvGorusGonder()">✉️ Görüş &amp; Öneri</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-info-footer">
+                        <div class="footer-logo">🕌</div>
+                        <div class="footer-ver">Namaz Dostu v66.4</div>
+                        <div style="font-size: 0.8rem; margin-top: 4px;">Tüm Hakları Saklıdır • Diyanet Uyumlu • Çevrimdışı Çalışır</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation Bar (5 Sekmeli Yeni Menü) -->
+    <nav id="bottom-nav">
+        <button class="nav-tab active" data-page="home"><span class="tab-icon">🏠</span><span class="tab-label">Ana Sayfa</span></button>
+        <button class="nav-tab" data-page="kurandua"><span class="tab-icon">📖</span><span class="tab-label">Kuran &amp; Dua</span></button>
+        <button class="nav-tab" data-page="ibadet"><span class="tab-icon">🕌</span><span class="tab-label">İbadet</span></button>
+        <button class="nav-tab" data-page="araclar"><span class="tab-icon">🧰</span><span class="tab-label">Araçlar</span></button>
+        <button class="nav-tab" data-page="settings"><span class="tab-icon">⚙️</span><span class="tab-label">Ayarlar</span></button>
+    </nav>
+
+    <!-- Vakit Detay Paneli (alttan açılır): Ezan sesi + Hatırlatıcı -->
+    <div id="prayer-sheet" class="sheet-backdrop" style="display:none;" onclick="closePrayerSheet()">
+        <div class="sheet" onclick="event.stopPropagation()">
+            <div class="sheet-grip"></div>
+            <div class="sheet-head">
+                <span id="sheet-name" class="sheet-name">Yatsı</span>
+                <span id="sheet-time" class="sheet-time">21:45</span>
+            </div>
+            <div id="sheet-status" class="sheet-status"></div>
+            <div class="sheet-row">
+                <span class="sheet-row-label">Ezan sesi açık</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sheet-adhan" onchange="togglePrayerAdhan(this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div id="sheet-sabah-satir" class="sheet-row" style="display:none;">
+                <span class="sheet-row-label">⏰ Sabah ezanı alarmı <small id="sheet-sabah-durum" class="sheet-sabah-durum"></small></span>
+                <button class="sheet-btn" style="flex:0 0 auto;padding:8px 16px;" onclick="hvSabahAlarmaGit()">Ayarla</button>
+            </div>
+            <div class="sheet-actions">
+                <button class="sheet-btn primary" onclick="setPrayerReminder()">Hatırlatıcı kur</button>
+                <button class="sheet-btn" onclick="closePrayerSheet()">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-toast" class="app-toast-box"></div>
+
+    <!-- PWA Service Worker Registration & Mobile Cache Invalidator -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js?v=66.4.0')
+            .then(reg => {
+              reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                installingWorker.onstatechange = () => {
+                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    window.location.reload();
+                  }
+                };
+              };
+            })
+            .catch(err => console.warn('[PWA] SW reg failed:', err));
+        });
+      }
+    </script>
+</body>
+</html>
