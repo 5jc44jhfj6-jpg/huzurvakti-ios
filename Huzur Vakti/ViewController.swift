@@ -303,6 +303,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         icon.clipsToBounds = true
         lv.addSubview(icon)
         splashIconView = icon
+        icon.isHidden = true   // v1.8: açılış görselinin içinde ikon ve isim zaten var
 
         // ── Isim ──
         let title = UILabel()
@@ -318,6 +319,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
                          .foregroundColor: hvGoldPale])
         lv.addSubview(title)
         splashTitle = title
+        title.isHidden = true
 
         // ── Alt yazi ──
         let cap = UILabel()
@@ -333,6 +335,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
                          .foregroundColor: hvGold.withAlphaComponent(0.80)])
         lv.addSubview(cap)
         splashSubtitle = cap
+        cap.isHidden = true
 
         NSLayoutConstraint.activate([
             bg.topAnchor.constraint(equalTo: lv.topAnchor),
