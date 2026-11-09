@@ -12,6 +12,20 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
+      - name: Widget uzantisi (Namaz Dostu 1.9)
+        script: |
+          set -e
+          A="NamazDostuWidget/Assets.xcassets"
+          mkdir -p "$A"
+          echo '{"info":{"author":"xcode","version":1}}' > "$A/Contents.json"
+          for ad in vakit_safak vakit_sabah vakit_ogle vakit_ikindi vakit_aksam vakit_gece; do
+            mkdir -p "$A/$ad.imageset"
+            curl -fsSL --retry 3 "https://5jc44jhfj6-jpg.github.io/huzurvakti/img/$ad.jpg" -o "$A/$ad.imageset/$ad.jpg"
+            sips -Z 640 "$A/$ad.imageset/$ad.jpg" >/dev/null
+            echo "{\"images\":[{\"idiom\":\"universal\",\"filename\":\"$ad.jpg\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}" > "$A/$ad.imageset/Contents.json"
+          done
+          gem list -i xcodeproj >/dev/null 2>&1 || gem install xcodeproj --no-document
+          ruby widget_ekle.rb
       - name: Install CocoaPods
         script: |
           pod install --repo-update
