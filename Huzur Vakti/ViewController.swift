@@ -160,6 +160,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
         htmlIsLoaded = true
+        WidgetBridge.sayfaYuklendi()
         
         self.setProgress(1.0, true)
         self.animateConnectionProblem(false)
@@ -426,6 +427,9 @@ extension ViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "print" {
             printView(webView: HuzurVakti.webView)
+        }
+        if message.name == "widget-data" {
+            WidgetBridge.veriGeldi(message.body)
         }
         if message.name == "push-subscribe" {
             handleSubscribeTouch(message: message)

@@ -21,20 +21,22 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.8</string>
+	<string>1.9</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string>com.huzurvakti.namazvakitleri</string>
 			<key>CFBundleURLSchemes</key>
-			<array />
+			<array>
+				<string>namazdostu</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>18</string>
+	<string>19</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>

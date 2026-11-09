@@ -16,6 +16,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     userContentController.add(WKSMH, name: "push-token")
     userContentController.add(WKSMH, name: "schedule-local-notification")
     userContentController.add(WKSMH, name: "clear-local-notifications")
+    userContentController.add(WKSMH, name: "widget-data")
 
     config.userContentController = userContentController
 

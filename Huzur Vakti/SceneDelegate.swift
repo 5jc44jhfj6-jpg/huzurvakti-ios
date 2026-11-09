@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         // See if we were launched via scheme URL
-        if let schemeUrl = connectionOptions.urlContexts.first?.url {
+        if let schemeUrl = connectionOptions.urlContexts.first?.url, !WidgetBridge.baglanti(schemeUrl) {
             // Convert scheme://url to a https://url
             var comps = URLComponents(url: schemeUrl, resolvingAgainstBaseURL: false)
             comps?.scheme = "https"
@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // This function is called when our app is already running and the user clicks a custom scheme URL
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let scheme = URLContexts.first?.url {
+        if let scheme = URLContexts.first?.url, !WidgetBridge.baglanti(scheme) {
             // Convert scheme://url to a https://url and navigate to it
             var comps = URLComponents(url: scheme, resolvingAgainstBaseURL: false)
             comps?.scheme = "https"
@@ -86,6 +86,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
+        WidgetBridge.uygulamaAcildi()
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
     }
