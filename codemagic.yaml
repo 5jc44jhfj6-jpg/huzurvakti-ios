@@ -7,8 +7,11 @@ workflows:
       app_store_connect: Huzur Vakti
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.huzurvakti.namazvakitleri
+        provisioning_profiles:
+          - huzurvakti_appstore_19
+          - namazdostu_widget_appstore
+        certificates:
+          - HuzurVakti
       xcode: latest
       cocoapods: default
     scripts:
