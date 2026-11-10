@@ -40,6 +40,19 @@ workflows:
           xcode-project build-ipa \
             --workspace "Huzur Vakti.xcworkspace" \
             --scheme "Huzur Vakti" || (cat /tmp/xcodebuild_logs/*.log && exit 1)
+      - name: Widget kontrol (IPA icerigi)
+        script: |
+          IPA=$(ls build/ios/ipa/*.ipa | head -1)
+          echo "IPA: $IPA"
+          unzip -l "$IPA" | grep -i -E "PlugIns|appex" | head -40 || echo "!!! WIDGET UZANTISI IPA ICINDE YOK !!!"
+          rm -rf /tmp/ipa && mkdir -p /tmp/ipa && unzip -q "$IPA" -d /tmp/ipa
+          APPEX=$(find /tmp/ipa -name "*.appex" | head -1)
+          echo "APPEX: $APPEX"
+          if [ -n "$APPEX" ]; then
+            plutil -p "$APPEX/Info.plist" || true
+            codesign -d --entitlements :- "$APPEX" 2>/dev/null || true
+            codesign -d --entitlements :- /tmp/ipa/Payload/*.app 2>/dev/null | head -60 || true
+          fi
     artifacts:
       - build/ios/ipa/*.ipa
       - "**/*.ipa"
