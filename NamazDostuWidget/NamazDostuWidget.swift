@@ -34,12 +34,13 @@ func hvSerif(_ boy: CGFloat, _ agirlik: Font.Weight = .regular) -> Font {
 // MARK: - Veri modeli (web'in gönderdiği JSON)
 
 struct HVGun: Codable { let d: String; let h: String?; let t: [String] }
-struct HVAyet: Codable { let d: String; let m: String; let k: String; let kk: String? }
+struct HVAyet: Codable { let d: String?; let m: String; let k: String; let kk: String? }
 struct HVSon: Codable { let ad: String?; let no: Int?; let ayet: Int?; let sayfa: Int?; let hatim: Int? }
 struct HVVeri: Codable {
     let sehir: String?
     let gunler: [HVGun]?
     let ayetler: [HVAyet]?
+    let havuz: [HVAyet]?
     let son: HVSon?
 }
 
@@ -98,6 +99,7 @@ struct HVAn {
     let hedef: Date                // sıradaki vaktin tarihi
     let onceki: Date               // bir önceki vaktin tarihi (halka için)
     let ayet: HVAyet?
+    var kisaAyet: HVAyet? = nil    // kilit ekranı için kısa âyet
     let son: HVSon?
     let takip: [String: Bool]
     let veriVar: Bool
@@ -147,22 +149,34 @@ enum HVHesap {
         return o.sorted { $0.t < $1.t }
     }
 
+    /// v1.9.1: 15 dakikada bir değişen âyet (havuzdan, zamana göre sabit seçim)
+    static func donenAyet(_ t: Date, _ v: HVVeri?, kisa: Bool) -> HVAyet? {
+        var h = v?.havuz ?? []
+        if kisa { h = h.filter { $0.m.count <= 100 } }
+        guard !h.isEmpty else { return nil }
+        let dilim = Int(floor(t.timeIntervalSince1970 / 900))
+        let k = ((dilim &* 48271) % 2147483647 + 2147483647) % 2147483647
+        return h[k % h.count]
+    }
+
     static func an(_ simdi: Date, _ v: HVVeri?) -> HVAn {
         let tum = vakitler(v)
         let bugunK = HVDepo.gunAnahtari(simdi)
         let bugun = v?.gunler?.first(where: { $0.d == bugunK }) ?? v?.gunler?.first
-        let ayet = v?.ayetler?.first(where: { $0.d == bugunK }) ?? v?.ayetler?.first
+        let gunluk = v?.ayetler?.first(where: { $0.d == bugunK }) ?? v?.ayetler?.first
+        let ayet = donenAyet(simdi, v, kisa: false) ?? gunluk
+        let kisa = donenAyet(simdi, v, kisa: true) ?? ((gunluk?.m.count ?? 999) <= 100 ? gunluk : nil)
         if let ix = tum.firstIndex(where: { $0.t > simdi }) {
             let s = tum[ix]
             let once = ix > 0 ? tum[ix - 1].t : s.t.addingTimeInterval(-6 * 3600)
             return HVAn(tarih: simdi, sehir: v?.sehir ?? "", hicri: bugun?.h ?? "", saatler: bugun?.t ?? [],
-                        sonraki: s.i, hedef: s.t, onceki: once, ayet: ayet, son: v?.son,
+                        sonraki: s.i, hedef: s.t, onceki: once, ayet: ayet, kisaAyet: kisa, son: v?.son,
                         takip: HVDepo.takip(simdi), veriVar: true)
         }
         // veri yok / bitti → örnek görünüm
         return HVAn(tarih: simdi, sehir: v?.sehir ?? "", hicri: "", saatler: bugun?.t ?? [],
                     sonraki: 3, hedef: simdi.addingTimeInterval(5045), onceki: simdi.addingTimeInterval(-3600),
-                    ayet: ayet, son: v?.son, takip: HVDepo.takip(simdi), veriVar: false)
+                    ayet: ayet, kisaAyet: kisa, son: v?.son, takip: HVDepo.takip(simdi), veriVar: false)
     }
 }
 
@@ -189,14 +203,17 @@ struct HVSaglayici: TimelineProvider {
         for x in HVHesap.vakitler(v) where x.t > simdi && x.t < simdi.addingTimeInterval(36 * 3600) {
             anlar.append(x.t.addingTimeInterval(1))
         }
+        // her 15 dakikada âyet değişsin (sonraki 12 saat)
+        let ceyrek = (floor(simdi.timeIntervalSince1970 / 900) + 1) * 900
+        for q in 0..<48 { anlar.append(Date(timeIntervalSince1970: ceyrek + Double(q) * 900 + 1)) }
         let cal = Calendar.current
         if let gy = cal.nextDate(after: simdi, matching: DateComponents(hour: 0, minute: 0, second: 5), matchingPolicy: .nextTime) {
             anlar.append(gy)
         }
-        anlar.sort()
+        let ufuk = simdi.addingTimeInterval(12 * 3600)
+        anlar = anlar.filter { $0 <= ufuk.addingTimeInterval(60) }.sorted()
         let girisler = anlar.map { HVGiris(date: $0, an: HVHesap.an($0, v)) }
-        let son = anlar.last ?? simdi.addingTimeInterval(3600)
-        completion(Timeline(entries: girisler, policy: .after(son.addingTimeInterval(60))))
+        completion(Timeline(entries: girisler, policy: .after(ufuk)))
     }
 
     func ornek() -> HVGiris {
@@ -372,7 +389,7 @@ struct HVBirlesikBuyuk: View {
                 .padding(.horizontal, 10).padding(.top, 6)
                 VStack(alignment: .leading, spacing: 3) {
                     Rectangle().fill(Color.hvAltin.opacity(0.4)).frame(height: 1)
-                    Text("❁ GÜNÜN ÂYETİ").font(hvSerif(10.5, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13)).padding(.top, 4)
+                    Text("❁ ÂYET-İ KERÎME").font(hvSerif(10.5, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13)).padding(.top, 4)
                     Text(hvTirnak(an.ayet?.m ?? "")).font(hvSerif(13.5).italic()).foregroundColor(.hvEsp).lineLimit(4).minimumScaleFactor(0.75)
                     Text(an.ayet?.k ?? "").font(hvSerif(11, .medium)).foregroundColor(.hvKahve)
                 }
@@ -490,20 +507,25 @@ struct HVAyetGorunum: View {
     var metin: String { an.ayet?.m ?? "Bilesiniz ki kalpler ancak Allah'ı anmakla huzur bulur." }
     var kaynak: String { an.ayet?.k ?? "Ra'd Sûresi · 28. Âyet" }
     var uzun: Bool { metin.count > 95 }
+    var kilitAyet: HVAyet? { an.kisaAyet }
+    var kilitMetin: String { kilitAyet?.m ?? "Bilesiniz ki kalpler ancak Allah'ı anmakla huzur bulur." }
     var body: some View {
         Group {
             switch aile {
             case .accessoryRectangular:
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("❁ Günün Âyeti").font(.system(size: 12, weight: .semibold))
-                    Text(metin).font(hvSerif(12).italic()).lineLimit(2)
-                    Text(an.ayet?.kk ?? "").font(.system(size: 10, weight: .medium)).opacity(0.85)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(kilitMetin)
+                        .font(.system(size: 14, weight: .semibold))
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.75)
+                        .widgetAccentable()
+                    Text("— " + (kilitAyet?.kk ?? "Ra'd 28")).font(.system(size: 11, weight: .medium)).opacity(0.85)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .hvZemin { Color.clear }
             case .systemSmall:
                 VStack(spacing: 6) {
-                    Text("❁ GÜNÜN ÂYETİ").font(hvSerif(10, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13))
+                    Text("❁ ÂYET-İ KERÎME").font(hvSerif(10, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13))
                     Text(hvTirnak(metin)).font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
                     Text(an.ayet?.kk ?? "").font(hvSerif(10.5, .medium)).foregroundColor(.hvKahve)
                 }
@@ -521,7 +543,7 @@ struct HVAyetGorunum: View {
                             }
                         }
                         VStack(alignment: .leading, spacing: 0) {
-                            HStack { Spacer(); HVRozet(yazi: "❁ Günün Âyeti ❁", boy: 11.5); Spacer() }
+                            HStack { Spacer(); HVRozet(yazi: "❁ Âyet-i Kerîme ❁", boy: 11.5); Spacer() }
                                 .padding(.top, 8)
                             Spacer(minLength: 2)
                             Text(hvTirnak(metin))
@@ -548,8 +570,8 @@ struct AyetWidget: Widget {
     let kind = "NDAyet"
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: HVSaglayici()) { e in HVAyetGorunum(an: e.an) }
-            .configurationDisplayName("Günün Âyeti")
-            .description("Her gün yeni bir âyet ve meâli.")
+            .configurationDisplayName("Âyet-i Kerîme")
+            .description("Her 15 dakikada bir yeni âyet ve meâli. Kilit ekranına da eklenebilir.")
             .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
             .hvKenarsiz()
     }
@@ -735,22 +757,23 @@ struct HVKilit: View {
                         Text(ad)
                     } currentValueLabel: {
                         VStack(spacing: 0) {
-                            Text(ad).font(.system(size: 10, weight: .semibold))
-                            Text(saat).font(.system(size: 13, weight: .bold)).monospacedDigit()
+                            Text(ad).font(.system(size: 11, weight: .bold))
+                            Text(saat).font(.system(size: 15, weight: .heavy)).monospacedDigit().minimumScaleFactor(0.7)
                         }
                     }
                     .gaugeStyle(.accessoryCircularCapacity)
                 }
             case .accessoryInline:
-                Text("☾ \(ad) \(saat)")
+                (Text("☾ \(ad) \(saat) · ") + Text(an.hedef, style: .relative))
             default:
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("\(ad) \(saat)").font(.system(size: 15, weight: .bold))
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("\(ad) \(saat)").font(.system(size: 18, weight: .heavy)).widgetAccentable()
                     (Text(an.hedef, style: .relative).monospacedDigit() + Text(" kaldı"))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     if an.sonraki < 5, an.saatler.count > an.sonraki + 1 {
-                        Text("\(HV_VAKIT_ADLARI[an.sonraki + 1]) \(an.saatler[an.sonraki + 1])").font(.system(size: 12)).opacity(0.85)
+                        Text("Sonra \(HV_VAKIT_ADLARI[an.sonraki + 1]) \(an.saatler[an.sonraki + 1])").font(.system(size: 13, weight: .medium)).opacity(0.85)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
