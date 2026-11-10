@@ -373,7 +373,7 @@ struct HVBirlesikBuyuk: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Rectangle().fill(Color.hvAltin.opacity(0.4)).frame(height: 1)
                     Text("❁ GÜNÜN ÂYETİ").font(hvSerif(10.5, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13)).padding(.top, 4)
-                    Text("“\(an.ayet?.m ?? "")”").font(hvSerif(13.5).italic()).foregroundColor(.hvEsp).lineLimit(4).minimumScaleFactor(0.75)
+                    Text(hvTirnak(an.ayet?.m ?? "")).font(hvSerif(13.5).italic()).foregroundColor(.hvEsp).lineLimit(4).minimumScaleFactor(0.75)
                     Text(an.ayet?.k ?? "").font(hvSerif(11, .medium)).foregroundColor(.hvKahve)
                 }
                 .padding(.horizontal, 14).padding(.top, 6)
@@ -504,7 +504,7 @@ struct HVAyetGorunum: View {
             case .systemSmall:
                 VStack(spacing: 6) {
                     Text("❁ GÜNÜN ÂYETİ").font(hvSerif(10, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13))
-                    Text("“\(metin)”").font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
+                    Text(hvTirnak(metin)).font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
                     Text(an.ayet?.kk ?? "").font(hvSerif(10.5, .medium)).foregroundColor(.hvKahve)
                 }
                 .padding(12)
@@ -524,7 +524,7 @@ struct HVAyetGorunum: View {
                             HStack { Spacer(); HVRozet(yazi: "❁ Günün Âyeti ❁", boy: 11.5); Spacer() }
                                 .padding(.top, 8)
                             Spacer(minLength: 2)
-                            Text("“\(metin)”")
+                            Text(hvTirnak(metin))
                                 .font(hvSerif(uzun ? 13.5 : 17).italic())
                                 .foregroundColor(.hvEsp)
                                 .lineSpacing(1)
@@ -746,10 +746,9 @@ struct HVKilit: View {
             default:
                 VStack(alignment: .leading, spacing: 1) {
                     Text("\(ad) \(saat)").font(.system(size: 15, weight: .bold))
-                    HStack(spacing: 3) {
-                        Text(an.hedef, style: .relative).monospacedDigit()
-                        Text("kaldı")
-                    }.font(.system(size: 12, weight: .medium))
+                    (Text(an.hedef, style: .relative).monospacedDigit() + Text(" kaldı"))
+                        .font(.system(size: 12, weight: .medium))
+                        .lineLimit(1)
                     if an.sonraki < 5, an.saatler.count > an.sonraki + 1 {
                         Text("\(HV_VAKIT_ADLARI[an.sonraki + 1]) \(an.saatler[an.sonraki + 1])").font(.system(size: 12)).opacity(0.85)
                     }
@@ -785,4 +784,10 @@ struct NamazDostuWidgetPaketi: WidgetBundle {
         SayacKoyuWidget()
         KilitWidget()
     }
+}
+
+/// Âyet metnini tek bir tırnak çiftiyle sarar (metinde zaten tırnak varsa çiftlemez)
+func hvTirnak(_ m: String) -> String {
+    let t = m.trimmingCharacters(in: CharacterSet(charactersIn: "“”\"\u{201E}« »").union(.whitespacesAndNewlines))
+    return t.isEmpty ? "" : "“\(t)”"
 }
