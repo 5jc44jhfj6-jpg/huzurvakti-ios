@@ -431,6 +431,9 @@ extension ViewController: WKScriptMessageHandler {
         if message.name == "widget-data" {
             WidgetBridge.veriGeldi(message.body)
         }
+        if message.name == "compass" {
+            if let k = message.body as? String, k == "start" { Pusula.paylasilan.baslat() } else { Pusula.paylasilan.durdur() }
+        }
         if message.name == "push-subscribe" {
             handleSubscribeTouch(message: message)
         }
