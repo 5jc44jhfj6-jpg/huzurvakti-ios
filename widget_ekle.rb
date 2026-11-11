@@ -10,8 +10,18 @@ ANA_ID = 'com.huzurvakti.namazvakitleri'
 proje = Xcodeproj::Project.open(PROJE)
 ana = proje.targets.find { |t| t.name == ANA } or abort("Ana hedef yok")
 
+# 0) Bildirim sesleri (ezan2/3/4.caf, bip.caf) ana uygulamanın kaynaklarına
+['ezan2.caf', 'ezan3.caf', 'ezan4.caf', 'bip.caf'].each do |ses|
+  next unless File.exist?("#{ANA}/#{ses}")
+  unless ana.resources_build_phase.files_references.any? { |f| f && f.path && f.path.end_with?(ses) }
+    ref = proje.main_group.new_reference("#{ANA}/#{ses}")
+    ana.resources_build_phase.add_file_reference(ref)
+    puts "+ #{ses} kaynaklara eklendi"
+  end
+end
+
 # 1) Ana uygulamaya WidgetBridge.swift ve Pusula.swift
-['WidgetBridge.swift', 'Pusula.swift'].each do |dosya|
+['WidgetBridge.swift', 'Pusula.swift', 'NDCanli.swift'].each do |dosya|
   unless ana.source_build_phase.files_references.any? { |f| f && f.path && f.path.end_with?(dosya) }
     ref = proje.main_group.new_reference("#{ANA}/#{dosya}")
     ana.source_build_phase.add_file_reference(ref)
@@ -26,13 +36,16 @@ if proje.targets.any? { |t| t.name == UZANTI }
 end
 
 # 2) Uzantı hedefi
-uz = proje.new_target(:app_extension, UZANTI, :ios, '16.0', proje.products_group, :swift)
+uz = proje.new_target(:app_extension, UZANTI, :ios, '16.1', proje.products_group, :swift)
 grup = proje.main_group.new_group(UZANTI, UZANTI)
 swift = grup.new_reference('NamazDostuWidget.swift')
 varliklar = grup.new_reference('Assets.xcassets')
 grup.new_reference('Info.plist')
 grup.new_reference('NamazDostuWidget.entitlements')
 uz.source_build_phase.add_file_reference(swift)
+# Canlı etkinlik tanımı (NDCanli.swift) uzantıda da derlensin
+canli_ref = proje.main_group.files.find { |f| f.path && f.path.end_with?('NDCanli.swift') } || proje.main_group.new_reference("#{ANA}/NDCanli.swift")
+uz.source_build_phase.add_file_reference(canli_ref)
 uz.resources_build_phase.add_file_reference(varliklar)
 
 ['WidgetKit', 'SwiftUI'].each do |fw|
@@ -46,14 +59,15 @@ uz.build_configurations.each do |c|
   s['INFOPLIST_FILE'] = "#{UZANTI}/Info.plist"
   s['CODE_SIGN_ENTITLEMENTS'] = "#{UZANTI}/NamazDostuWidget.entitlements"
   s['CODE_SIGN_STYLE'] = 'Automatic'
-  s['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+  s['IPHONEOS_DEPLOYMENT_TARGET'] = '16.1'
+  s['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) WIDGET_EXTENSION'
   s['SWIFT_VERSION'] = '5.0'
   s['TARGETED_DEVICE_FAMILY'] = '1,2'
   s['SUPPORTS_MACCATALYST'] = 'NO'
   s['SKIP_INSTALL'] = 'YES'
   s['GENERATE_INFOPLIST_FILE'] = 'NO'
   s['MARKETING_VERSION'] = '1.9.2'
-  s['CURRENT_PROJECT_VERSION'] = '23'
+  s['CURRENT_PROJECT_VERSION'] = '24'
   s['ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME'] = ''
   s['ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME'] = ''
   s['LD_RUNPATH_SEARCH_PATHS'] = ['$(inherited)', '@executable_path/Frameworks', '@executable_path/../../Frameworks']
