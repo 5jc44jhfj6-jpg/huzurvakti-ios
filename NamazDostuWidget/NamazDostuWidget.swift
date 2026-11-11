@@ -794,11 +794,65 @@ struct KilitWidget: Widget {
     }
 }
 
+// MARK: - 7) Canlı geri sayım (Live Activity · kilit ekranı + Dynamic Island)
+
+@available(iOS 16.1, *)
+struct VakitCanliWidget: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: NDVakitAttributes.self) { ctx in
+            let st = ctx.state
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(st.ad.uppercased()) VAKTİNE KALAN").font(.system(size: 11, weight: .bold)).foregroundColor(.hvAltin)
+                    Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
+                        .font(.system(size: 34, weight: .heavy, design: .rounded)).monospacedDigit().foregroundColor(.white)
+                    Text("Ezan \(st.saat) · Sonra \(st.sonrakiAd) \(st.sonrakiSaat)").font(.system(size: 12, weight: .medium)).foregroundColor(.white.opacity(0.8))
+                }
+                Spacer(minLength: 0)
+                VStack(spacing: 2) {
+                    Text("☾").font(.system(size: 26)).foregroundColor(.hvAltin)
+                    Text(ctx.attributes.sehir).font(.system(size: 11, weight: .semibold)).foregroundColor(.white.opacity(0.85)).lineLimit(1)
+                }
+            }
+            .padding(.horizontal, 16).padding(.vertical, 12)
+            .activityBackgroundTint(Color.hvEsp.opacity(0.92))
+            .activitySystemActionForegroundColor(.hvAltin)
+            .widgetURL(hvLink("vakit"))
+        } dynamicIsland: { ctx in
+            let st = ctx.state
+            return DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(st.ad).font(.system(size: 15, weight: .bold)).foregroundColor(.hvAltin)
+                        Text("Ezan \(st.saat)").font(.system(size: 12)).foregroundColor(.white.opacity(0.8))
+                    }
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
+                        .font(.system(size: 22, weight: .heavy, design: .rounded)).monospacedDigit().multilineTextAlignment(.trailing)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    Text("Sonra \(st.sonrakiAd) \(st.sonrakiSaat)").font(.system(size: 12)).foregroundColor(.white.opacity(0.75))
+                }
+            } compactLeading: {
+                Text("☾ \(st.ad)").font(.system(size: 13, weight: .bold)).foregroundColor(.hvAltin)
+            } compactTrailing: {
+                Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
+                    .monospacedDigit().font(.system(size: 13, weight: .semibold)).frame(maxWidth: 58)
+            } minimal: {
+                Text("☾").foregroundColor(.hvAltin)
+            }
+            .widgetURL(hvLink("vakit"))
+        }
+    }
+}
+
 // MARK: - Paket
 
 @main
 struct NamazDostuWidgetPaketi: WidgetBundle {
     var body: some Widget {
+        VakitCanliWidget()
         VakitlerWidget()
         AyetWidget()
         SonOkunanWidget()
