@@ -10,11 +10,13 @@ ANA_ID = 'com.huzurvakti.namazvakitleri'
 proje = Xcodeproj::Project.open(PROJE)
 ana = proje.targets.find { |t| t.name == ANA } or abort("Ana hedef yok")
 
-# 1) Ana uygulamaya WidgetBridge.swift
-unless ana.source_build_phase.files_references.any? { |f| f && f.path && f.path.end_with?('WidgetBridge.swift') }
-  ref = proje.main_group.new_reference("#{ANA}/WidgetBridge.swift")
-  ana.source_build_phase.add_file_reference(ref)
-  puts '+ WidgetBridge.swift ana hedefe eklendi'
+# 1) Ana uygulamaya WidgetBridge.swift ve Pusula.swift
+['WidgetBridge.swift', 'Pusula.swift'].each do |dosya|
+  unless ana.source_build_phase.files_references.any? { |f| f && f.path && f.path.end_with?(dosya) }
+    ref = proje.main_group.new_reference("#{ANA}/#{dosya}")
+    ana.source_build_phase.add_file_reference(ref)
+    puts "+ #{dosya} ana hedefe eklendi"
+  end
 end
 
 if proje.targets.any? { |t| t.name == UZANTI }
@@ -50,8 +52,8 @@ uz.build_configurations.each do |c|
   s['SUPPORTS_MACCATALYST'] = 'NO'
   s['SKIP_INSTALL'] = 'YES'
   s['GENERATE_INFOPLIST_FILE'] = 'NO'
-  s['MARKETING_VERSION'] = '1.9.1'
-  s['CURRENT_PROJECT_VERSION'] = '22'
+  s['MARKETING_VERSION'] = '1.9.2'
+  s['CURRENT_PROJECT_VERSION'] = '23'
   s['ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME'] = ''
   s['ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME'] = ''
   s['LD_RUNPATH_SEARCH_PATHS'] = ['$(inherited)', '@executable_path/Frameworks', '@executable_path/../../Frameworks']
