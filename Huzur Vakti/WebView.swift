@@ -18,6 +18,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     userContentController.add(WKSMH, name: "clear-local-notifications")
     userContentController.add(WKSMH, name: "widget-data")
     userContentController.add(WKSMH, name: "compass")
+    userContentController.add(WKSMH, name: "canli")
     // v1.9.2: web'e "telefonun pusulası var" bayrağı (kıble için hareket izni istenmez)
     userContentController.addUserScript(WKUserScript(source: "window.hvIosPusulaVar = true;", injectionTime: .atDocumentStart, forMainFrameOnly: true))
 

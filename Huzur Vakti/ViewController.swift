@@ -431,6 +431,9 @@ extension ViewController: WKScriptMessageHandler {
         if message.name == "widget-data" {
             WidgetBridge.veriGeldi(message.body)
         }
+        if message.name == "canli" {
+            NDCanliYonetici.ayar((message.body as? Bool) ?? ((message.body as? NSNumber)?.boolValue ?? true))
+        }
         if message.name == "compass" {
             if let k = message.body as? String, k == "start" { Pusula.paylasilan.baslat() } else { Pusula.paylasilan.durdur() }
         }
@@ -467,9 +470,14 @@ extension ViewController: WKScriptMessageHandler {
                 let soundKey = (dict["sound"] as? String) ?? "default"
                 if soundKey == "none" {
                     content.sound = nil
-                } else if soundKey == "ezan",
-                          Bundle.main.url(forResource: "ezan", withExtension: "caf") != nil {
-                    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "ezan.caf"))
+                } else if soundKey.hasPrefix("ezan") {
+                    // v1.9.2: ezan, ezan2, ezan3, ezan4 → paketteki .caf (yoksa klasik ezan.caf)
+                    let ad = Bundle.main.url(forResource: soundKey, withExtension: "caf") != nil ? soundKey : "ezan"
+                    content.sound = Bundle.main.url(forResource: ad, withExtension: "caf") != nil
+                        ? UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(ad).caf"))
+                        : UNNotificationSound.default
+                } else if soundKey == "bip", Bundle.main.url(forResource: "bip", withExtension: "caf") != nil {
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "bip.caf"))
                 } else {
                     content.sound = UNNotificationSound.default
                 }

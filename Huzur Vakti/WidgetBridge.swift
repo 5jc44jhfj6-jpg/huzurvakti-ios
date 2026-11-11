@@ -32,6 +32,7 @@ enum WidgetBridge {
             ud.set(t, forKey: "takip")
         }
         yenile()
+        NDCanliYonetici.guncelle(json: j)
     }
 
     static func yenile() {
