@@ -66,8 +66,8 @@ uz.build_configurations.each do |c|
   s['SUPPORTS_MACCATALYST'] = 'NO'
   s['SKIP_INSTALL'] = 'YES'
   s['GENERATE_INFOPLIST_FILE'] = 'NO'
-  s['MARKETING_VERSION'] = '1.9.2'
-  s['CURRENT_PROJECT_VERSION'] = '24'
+  s['MARKETING_VERSION'] = '1.9.3'
+  s['CURRENT_PROJECT_VERSION'] = '25'
   s['ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME'] = ''
   s['ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME'] = ''
   s['LD_RUNPATH_SEARCH_PATHS'] = ['$(inherited)', '@executable_path/Frameworks', '@executable_path/../../Frameworks']
