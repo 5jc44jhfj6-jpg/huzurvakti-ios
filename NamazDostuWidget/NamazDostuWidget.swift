@@ -526,8 +526,8 @@ struct HVAyetGorunum: View {
             case .systemSmall:
                 VStack(spacing: 6) {
                     Text("❁ ÂYET-İ KERÎME").font(hvSerif(10, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13))
-                    Text(hvTirnak(metin)).font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
-                    Text(an.ayet?.kk ?? "").font(hvSerif(10.5, .medium)).foregroundColor(.hvKahve)
+                    Text(hvTirnak(kilitMetin)).font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
+                    Text(kilitAyet?.kk ?? "Ra'd 28").font(hvSerif(10.5, .medium)).foregroundColor(.hvKahve)
                 }
                 .padding(12)
                 .hvZemin { hvKremZemin }
@@ -798,49 +798,76 @@ struct KilitWidget: Widget {
 
 @available(iOS 16.1, *)
 struct VakitCanliWidget: Widget {
+    // 1.9.3: yeni tasarım — espresso zemin, altın serif sayaç, son 1 saati dolduran ince altın çubuk.
+    // Vakit girince ("stale") sayaç yerine "Ezan vakti" yazar.
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: NDVakitAttributes.self) { ctx in
             let st = ctx.state
-            HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("\(st.ad.uppercased()) VAKTİNE KALAN").font(.system(size: 11, weight: .bold)).foregroundColor(.hvAltin)
-                    Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
-                        .font(.system(size: 34, weight: .heavy, design: .rounded)).monospacedDigit().foregroundColor(.white)
-                    Text("Ezan \(st.saat) · Sonra \(st.sonrakiAd) \(st.sonrakiSaat)").font(.system(size: 12, weight: .medium)).foregroundColor(.white.opacity(0.8))
+            let bitti = st.hedef <= Date()
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .center, spacing: 10) {
+                    Image(systemName: "moon.stars.fill").font(.system(size: 18, weight: .semibold)).foregroundColor(.hvAltin2)
+                    Text(bitti ? "\(st.ad.uppercased()) VAKTİ" : "\(st.ad.uppercased()) VAKTİNE")
+                        .font(.system(size: 12, weight: .bold)).tracking(1.2).foregroundColor(.hvAltin2)
+                    Spacer(minLength: 0)
+                    Text(ctx.attributes.sehir).font(.system(size: 12, weight: .semibold)).foregroundColor(.white.opacity(0.75)).lineLimit(1)
                 }
-                Spacer(minLength: 0)
-                VStack(spacing: 2) {
-                    Text("☾").font(.system(size: 26)).foregroundColor(.hvAltin)
-                    Text(ctx.attributes.sehir).font(.system(size: 11, weight: .semibold)).foregroundColor(.white.opacity(0.85)).lineLimit(1)
+                HStack(alignment: .firstTextBaseline) {
+                    if bitti {
+                        Text("Ezan vakti").font(hvSerif(34, .semibold)).foregroundColor(.white)
+                    } else {
+                        Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
+                            .font(hvSerif(40, .semibold)).monospacedDigit().foregroundColor(.white)
+                        Text("kaldı").font(hvSerif(16)).foregroundColor(.white.opacity(0.7))
+                    }
+                    Spacer(minLength: 0)
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(st.saat).font(hvSerif(22, .semibold)).foregroundColor(.hvAltin2).monospacedDigit()
+                        Text("Sonra \(st.sonrakiAd) \(st.sonrakiSaat)").font(.system(size: 11, weight: .medium)).foregroundColor(.white.opacity(0.65))
+                    }
+                }
+                if !bitti {
+                    ProgressView(timerInterval: st.baslangic...max(st.baslangic.addingTimeInterval(1), st.hedef), countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
+                        .progressViewStyle(.linear).tint(.hvAltin2)
                 }
             }
-            .padding(.horizontal, 16).padding(.vertical, 12)
-            .activityBackgroundTint(Color.hvEsp.opacity(0.92))
-            .activitySystemActionForegroundColor(.hvAltin)
+            .padding(.horizontal, 18).padding(.vertical, 14)
+            .activityBackgroundTint(Color.hvEsp.opacity(0.94))
+            .activitySystemActionForegroundColor(.hvAltin2)
             .widgetURL(hvLink("vakit"))
         } dynamicIsland: { ctx in
             let st = ctx.state
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(st.ad).font(.system(size: 15, weight: .bold)).foregroundColor(.hvAltin)
-                        Text("Ezan \(st.saat)").font(.system(size: 12)).foregroundColor(.white.opacity(0.8))
+                    HStack(spacing: 6) {
+                        Image(systemName: "moon.stars.fill").foregroundColor(.hvAltin2)
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(st.ad).font(.system(size: 15, weight: .bold)).foregroundColor(.hvAltin2)
+                            Text("Ezan \(st.saat)").font(.system(size: 12)).foregroundColor(.white.opacity(0.8))
+                        }
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
-                        .font(.system(size: 22, weight: .heavy, design: .rounded)).monospacedDigit().multilineTextAlignment(.trailing)
+                        .font(hvSerif(24, .semibold)).monospacedDigit().multilineTextAlignment(.trailing).foregroundColor(.white)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Sonra \(st.sonrakiAd) \(st.sonrakiSaat)").font(.system(size: 12)).foregroundColor(.white.opacity(0.75))
+                    ProgressView(timerInterval: st.baslangic...max(st.baslangic.addingTimeInterval(1), st.hedef), countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
+                        .progressViewStyle(.linear).tint(.hvAltin2)
                 }
             } compactLeading: {
-                Text("☾ \(st.ad)").font(.system(size: 13, weight: .bold)).foregroundColor(.hvAltin)
+                HStack(spacing: 3) {
+                    Image(systemName: "moon.stars.fill").font(.system(size: 12)).foregroundColor(.hvAltin2)
+                    Text(st.ad).font(.system(size: 13, weight: .bold)).foregroundColor(.hvAltin2)
+                }
             } compactTrailing: {
                 Text(timerInterval: Date()...max(Date(), st.hedef), countsDown: true)
-                    .monospacedDigit().font(.system(size: 13, weight: .semibold)).frame(maxWidth: 58)
+                    .monospacedDigit().font(.system(size: 13, weight: .semibold)).frame(maxWidth: 50)
             } minimal: {
-                Text("☾").foregroundColor(.hvAltin)
+                ProgressView(timerInterval: st.baslangic...max(st.baslangic.addingTimeInterval(1), st.hedef), countsDown: true) { EmptyView() } currentValueLabel: {
+                    Image(systemName: "moon.fill").font(.system(size: 9)).foregroundColor(.hvAltin2)
+                }
+                .progressViewStyle(.circular).tint(.hvAltin2)
             }
             .widgetURL(hvLink("vakit"))
         }
