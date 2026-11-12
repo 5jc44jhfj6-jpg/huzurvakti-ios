@@ -55,12 +55,16 @@ enum NDCanliYonetici {
         let simdi = Date()
         guard let ix = liste.firstIndex(where: { $0.t > simdi }) else { bitir(); return }
         let s = liste[ix]
-        let once = ix > 0 ? liste[ix - 1].t : s.t.addingTimeInterval(-3 * 3600)
+        // 1.9.3: sayaç yalnızca vakte son 1 saat kala görünür (şarj + sade kilit ekranı).
+        // iOS, sunucu olmadan canlı etkinliği kendiliğinden başlatmaya izin vermez: uygulama bu 1 saat içinde
+        // açılınca (ya da "önceden hatırlat" bildirimine dokununca) başlar, ezan vaktinde biter.
+        if s.t.timeIntervalSince(simdi) > 3600 { bitir(); return }
+        let once = max(ix > 0 ? liste[ix - 1].t : s.t.addingTimeInterval(-3600), s.t.addingTimeInterval(-3600))
         let sonra = ix + 1 < liste.count ? liste[ix + 1] : s
         let durum = NDVakitAttributes.ContentState(ad: adlar[s.i], saat: s.s, hedef: s.t, baslangic: once,
                                                     sonrakiAd: adlar[sonra.i], sonrakiSaat: sonra.s)
         let sehir = (o["sehir"] as? String) ?? ""
-        let icerik = ActivityContent(state: durum, staleDate: s.t.addingTimeInterval(60))
+        let icerik = ActivityContent(state: durum, staleDate: s.t)
         Task {
             let mevcut = Activity<NDVakitAttributes>.activities
             if let a = mevcut.first {
