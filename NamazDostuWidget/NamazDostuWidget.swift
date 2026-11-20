@@ -23,6 +23,19 @@ extension Color {
     static let hvKahve = Color(red: 0.42, green: 0.29, blue: 0.17)
 }
 
+// 1.9.4: "C · Koyu gece" widget rengi (espresso + altın, fotoğrafsız)
+extension Color {
+    static let hvC1 = Color(red: 0.231, green: 0.153, blue: 0.086)      // #3b2716
+    static let hvC2 = Color(red: 0.110, green: 0.067, blue: 0.039)      // #1c110a
+    static let hvCYazi = Color(red: 0.953, green: 0.902, blue: 0.800)   // #f3e6cc
+    static let hvCSoluk = Color(red: 0.788, green: 0.690, blue: 0.541)  // #c9b08a
+    static let hvCEtiket = Color(red: 0.914, green: 0.753, blue: 0.443) // #e9c071
+    static let hvCSayi = Color(red: 0.969, green: 0.922, blue: 0.824)   // #f7ebd2
+    static let hvCCizgi = Color(red: 0.953, green: 0.812, blue: 0.525)  // #f3cf86
+}
+let hvCZemin = RadialGradient(colors: [Color.hvC1, Color.hvC2], center: UnitPoint(x: 0.3, y: 0), startRadius: 0, endRadius: 360)
+let hvCHap = LinearGradient(colors: [Color(red: 0.914, green: 0.722, blue: 0.353), Color(red: 0.776, green: 0.541, blue: 0.173)], startPoint: .leading, endPoint: .trailing)
+
 let hvKremZemin = LinearGradient(colors: [Color.hvKrem, Color.hvKrem2], startPoint: .topLeading, endPoint: .bottomTrailing)
 let hvKoyuZemin = LinearGradient(colors: [Color.hvEsp2, Color.hvEsp], startPoint: .top, endPoint: .bottom)
 let hvAltinHap = LinearGradient(colors: [Color(red: 0.906, green: 0.769, blue: 0.486), Color.hvAltin], startPoint: .top, endPoint: .bottom)
@@ -127,6 +140,22 @@ struct HVAn {
         let top = hedef.timeIntervalSince(onceki)
         guard top > 0 else { return 0 }
         return max(0, min(1, tarih.timeIntervalSince(onceki) / top))
+    }
+    // 1.9.4: kilit ekranı / C widget yardımcıları
+    var sonrakiAd: String { HV_VAKIT_ADLARI[sonraki] }
+    var sonrakiSaat: String { saatler.count > sonraki ? saatler[sonraki] : HVAn.hm(hedef) }
+    var oncekiAd: String { HV_VAKIT_ADLARI[(sonraki + 5) % 6] }
+    var oncekiSaat: String { HVAn.hm(onceki) }
+    var kalanEtiket: String {
+        let e = ["İmsaka Kalan", "Güneşe Kalan", "Öğleye Kalan", "İkindiye Kalan", "Akşama Kalan", "Yatsıya Kalan"]
+        return e[sonraki]
+    }
+    /// geri sayım aralığı (başlangıç her zaman bitişten önce olsun, yoksa çöker)
+    var sayacAralik: ClosedRange<Date> { let b = min(tarih, hedef); return b...max(hedef, b.addingTimeInterval(1)) }
+    var ilerlemeAralik: ClosedRange<Date> { let b = min(onceki, hedef); return b...max(hedef, b.addingTimeInterval(1)) }
+    static func hm(_ t: Date) -> String {
+        let f = DateFormatter(); f.locale = Locale(identifier: "tr_TR"); f.dateFormat = "HH:mm"
+        return f.string(from: t)
     }
 }
 
@@ -297,7 +326,121 @@ struct HVAltinCizgi: View {
     }
 }
 
-// MARK: - 1) Vakitler (orta) + büyük birleşik
+// MARK: - 1.9.4 · C "Koyu gece" ana ekran widget'ları (küçük / orta / büyük)
+
+struct HVCSayac: View {   // canlı, 0'da durur
+    let an: HVAn
+    let boy: CGFloat
+    var body: some View {
+        Text(timerInterval: an.sayacAralik, countsDown: true)
+            .font(hvSerif(boy, .bold))
+            .monospacedDigit()
+            .foregroundColor(.hvCSayi)
+            .lineLimit(1)
+            .minimumScaleFactor(0.55)
+    }
+}
+
+struct HVCListe: View {
+    let an: HVAn
+    var boy: CGFloat = 12
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(0..<6, id: \.self) { i in
+                let on = i == an.sonraki
+                HStack {
+                    Text(HV_VAKIT_ADLARI[i]).font(hvSerif(boy, on ? .bold : .regular))
+                    Spacer(minLength: 4)
+                    Text(an.saatler.count > i ? an.saatler[i] : "--:--").font(hvSerif(boy, on ? .bold : .regular)).monospacedDigit()
+                }
+                .foregroundColor(on ? Color(red: 0.141, green: 0.082, blue: 0.043) : .hvCYazi)
+                .padding(.horizontal, 6)
+                .frame(maxHeight: .infinity)
+                .background(Group { if on { RoundedRectangle(cornerRadius: 6).fill(hvCHap) } })
+            }
+        }
+    }
+}
+
+struct HVCKucuk: View {
+    let an: HVAn
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("📍 \(an.sehir.isEmpty ? "Konum" : an.sehir)")
+                    .font(.system(size: 10.5, weight: .semibold)).foregroundColor(.hvCSoluk).lineLimit(1)
+                Spacer(minLength: 2)
+                Text(an.kalanEtiket).font(hvSerif(12)).foregroundColor(.hvCEtiket).lineLimit(1).minimumScaleFactor(0.8)
+                HVCSayac(an: an, boy: 28)
+                Spacer(minLength: 2)
+                Text("\(an.sonrakiAd) ezanı \(an.sonrakiSaat)")
+                    .font(.system(size: 10.5)).foregroundColor(.hvCSoluk).lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            Text("☾").font(.system(size: 14)).foregroundColor(.hvCCizgi)
+        }
+        .padding(14)
+        .hvZemin { hvCZemin }
+        .widgetURL(hvLink("vakit"))
+    }
+}
+
+struct HVCOrta: View {
+    let an: HVAn
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("📍 \(an.sehir.isEmpty ? "Konum" : an.sehir) · \(HVCOrta.kisaTarih(an.tarih))")
+                    .font(.system(size: 10.5, weight: .semibold)).foregroundColor(.hvCSoluk).lineLimit(1).minimumScaleFactor(0.75)
+                Spacer(minLength: 2)
+                Text(an.kalanEtiket).font(hvSerif(12)).foregroundColor(.hvCEtiket).lineLimit(1)
+                HVCSayac(an: an, boy: 30)
+                Spacer(minLength: 2)
+                Text("Ezan \(an.sonrakiSaat)").font(.system(size: 10.5)).foregroundColor(.hvCSoluk)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            Rectangle().fill(Color.hvCCizgi.opacity(0.3)).frame(width: 1)
+            HVCListe(an: an, boy: 12)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .hvZemin { hvCZemin }
+        .widgetURL(hvLink("vakit"))
+    }
+    static func kisaTarih(_ t: Date) -> String {
+        let f = DateFormatter(); f.locale = Locale(identifier: "tr_TR"); f.dateFormat = "d MMM"
+        return f.string(from: t)
+    }
+}
+
+struct HVCBuyuk: View {
+    let an: HVAn
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("📍 \(an.sehir.isEmpty ? "Konum" : an.sehir) · \(an.tarihUzun)")
+                .font(.system(size: 11, weight: .semibold)).foregroundColor(.hvCSoluk).lineLimit(1).minimumScaleFactor(0.75)
+            Text("\(an.kalanEtiket) Süre").font(hvSerif(14)).foregroundColor(.hvCEtiket).padding(.top, 10)
+            HVCSayac(an: an, boy: 42)
+            Rectangle().fill(Color.hvCCizgi.opacity(0.3)).frame(height: 1).padding(.top, 10).padding(.bottom, 8)
+            HVCListe(an: an, boy: 14)
+                .frame(maxHeight: .infinity)
+            if let a = an.kisaAyet ?? an.ayet, !a.m.isEmpty {
+                (Text(hvTirnak(a.m) + " ").italic().foregroundColor(Color(red: 0.851, green: 0.765, blue: 0.608))
+                 + Text(a.kk ?? a.k).foregroundColor(.hvCEtiket))
+                    .font(hvSerif(11))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3).minimumScaleFactor(0.8)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 10)
+            }
+        }
+        .padding(14)
+        .hvZemin { hvCZemin }
+        .widgetURL(hvLink("vakit"))
+    }
+}
+
+// MARK: - 1) Vakitler (orta) + büyük birleşik — eski krem/fotoğraflı görünüm (1.9.4'te C ile değişti, kod duruyor)
 
 struct HVVakitlerOrta: View {
     let an: HVAn
@@ -430,9 +573,9 @@ struct HVVakitlerGorunum: View {
     let an: HVAn
     var body: some View {
         Group {
-            if aile == .systemLarge { HVBirlesikBuyuk(an: an) } else { HVVakitlerOrta(an: an) }
+            // 1.9.4: C · Koyu gece (fotoğrafsız)
+            if aile == .systemLarge { HVCBuyuk(an: an) } else if aile == .systemSmall { HVCKucuk(an: an) } else { HVCOrta(an: an) }
         }
-        .hvZemin { hvKremZemin }
     }
 }
 
@@ -480,8 +623,8 @@ struct HVKucukSayac: View {
 struct SayacWidget: Widget {
     let kind = "NDSayac"
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: HVSaglayici()) { e in HVKucukSayac(an: e.an, koyu: false) }
-            .configurationDisplayName("Geri Sayım · Krem")
+        StaticConfiguration(kind: kind, provider: HVSaglayici()) { e in HVCKucuk(an: e.an) }
+            .configurationDisplayName("Geri Sayım")
             .description("Sıradaki vakte kalan süre.")
             .supportedFamilies([.systemSmall])
             .hvKenarsiz()
@@ -492,7 +635,7 @@ struct SayacKoyuWidget: Widget {
     let kind = "NDSayacKoyu"
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: HVSaglayici()) { e in HVKucukSayac(an: e.an, koyu: true) }
-            .configurationDisplayName("Geri Sayım · Koyu")
+            .configurationDisplayName("Geri Sayım · Fotoğraflı")
             .description("Sıradaki vakte kalan süre.")
             .supportedFamilies([.systemSmall])
             .hvKenarsiz()
@@ -509,19 +652,22 @@ struct HVAyetGorunum: View {
     var uzun: Bool { metin.count > 95 }
     var kilitAyet: HVAyet? { an.kisaAyet }
     var kilitMetin: String { kilitAyet?.m ?? "Bilesiniz ki kalpler ancak Allah'ı anmakla huzur bulur." }
+    var kilitKaynak: String { kilitAyet?.k ?? (kilitAyet?.kk ?? "Ra'd Sûresi · 28. Âyet") }
     var body: some View {
         Group {
             switch aile {
             case .accessoryRectangular:
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(kilitMetin)
-                        .font(.system(size: 14, weight: .semibold))
-                        .lineLimit(3)
-                        .minimumScaleFactor(0.75)
-                        .widgetAccentable()
-                    Text("— " + (kilitAyet?.kk ?? "Ra'd 28")).font(.system(size: 11, weight: .medium)).opacity(0.85)
+                // 1.9.4: ❁ GÜNÜN ÂYETİ · yalnız Türkçe meâl + "Sûre · âyet" (kilit ekranının altına da konur)
+                VStack(alignment: .center, spacing: 1) {
+                    Text("❁ GÜNÜN ÂYETİ").font(.system(size: 10, weight: .semibold)).opacity(0.85).widgetAccentable()
+                    Text(hvTirnak(kilitMetin))
+                        .font(.system(size: 13, weight: .medium, design: .serif).italic())
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.7)
+                    Text(kilitKaynak).font(.system(size: 10, weight: .medium)).opacity(0.8).lineLimit(1)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity)
                 .hvZemin { Color.clear }
             case .systemSmall:
                 VStack(spacing: 6) {
@@ -570,7 +716,7 @@ struct AyetWidget: Widget {
     let kind = "NDAyet"
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: HVSaglayici()) { e in HVAyetGorunum(an: e.an) }
-            .configurationDisplayName("Âyet-i Kerîme")
+            .configurationDisplayName("Günün Âyeti")
             .description("Her 15 dakikada bir yeni âyet ve meâli. Kilit ekranına da eklenebilir.")
             .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
             .hvKenarsiz()
@@ -753,7 +899,7 @@ struct HVKilit: View {
             case .accessoryCircular:
                 ZStack {
                     AccessoryWidgetBackground()
-                    Gauge(value: 1 - an.oran) {
+                    Gauge(value: an.oran) {
                         Text(ad)
                     } currentValueLabel: {
                         VStack(spacing: 0) {
@@ -766,15 +912,23 @@ struct HVKilit: View {
             case .accessoryInline:
                 (Text("☾ \(ad) \(saat) · ") + Text(an.hedef, style: .relative))
             default:
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("\(ad) \(saat)").font(.system(size: 18, weight: .heavy)).widgetAccentable()
-                    (Text(an.hedef, style: .relative).monospacedDigit() + Text(" kaldı"))
-                        .font(.system(size: 15, weight: .semibold))
+                // 1.9.4: "☾ AKŞAMA KALAN" + saniyeli canlı sayaç + ince ilerleme çubuğu + önceki/sonraki vakit
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("☾ \(HV_KALAN_ETIKET[an.sonraki])").font(.system(size: 11, weight: .semibold)).opacity(0.85).lineLimit(1)
+                    Text(timerInterval: an.sayacAralik, countsDown: true)
+                        .font(.system(size: 24, weight: .bold, design: .serif))
+                        .monospacedDigit()
                         .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                    if an.sonraki < 5, an.saatler.count > an.sonraki + 1 {
-                        Text("Sonra \(HV_VAKIT_ADLARI[an.sonraki + 1]) \(an.saatler[an.sonraki + 1])").font(.system(size: 13, weight: .medium)).opacity(0.85)
+                        .minimumScaleFactor(0.7)
+                        .widgetAccentable()
+                    ProgressView(timerInterval: an.ilerlemeAralik, countsDown: false) { EmptyView() } currentValueLabel: { EmptyView() }
+                        .progressViewStyle(.linear)
+                    HStack {
+                        Text("\(an.oncekiAd) \(an.oncekiSaat)")
+                        Spacer(minLength: 2)
+                        Text("\(ad) \(saat)")
                     }
+                    .font(.system(size: 10, weight: .medium)).opacity(0.8).lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
