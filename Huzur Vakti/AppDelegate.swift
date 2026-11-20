@@ -22,6 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // [START register_for_notifications]
    
         UNUserNotificationCenter.current().delegate = self
+        // 1.9.4: ezan bildirimleri kesilmesin — arka planda sıradaki bildirimleri ekle
+        HVBildirimPlani.arkaPlanKaydet()
+        HVBildirimPlani.doldur()
+        HVBildirimPlani.arkaPlanIste()
 
       //  let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
       //  UNUserNotificationCenter.current().requestAuthorization(
@@ -103,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print full message.
         print("push userInfo 3:", userInfo)
         sendPushToWebView(userInfo: userInfo)
+        HVBildirimPlani.doldur()   // 1.9.4: biri geldi → sıradakini ekle
 
         // Change this to your preferred presentation option
         completionHandler([[.banner, .list, .sound]])

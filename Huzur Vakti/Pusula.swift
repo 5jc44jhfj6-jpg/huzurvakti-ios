@@ -1,6 +1,8 @@
 //
-//  Pusula.swift — telefonun kendi pusulası (CoreLocation heading) → web hvNativeHeading(derece, doğruluk)
-//  Hareket (DeviceOrientation) izni gerekmez; konum izni zaten alınıyor.
+//  Pusula.swift — telefonun kendi pusulası (CoreLocation heading) → web hvNativeHeading(derece, doğruluk, gerçekKuzey)
+//  Hareket (DeviceOrientation) izni gerekmez; konum izni zaten alınıyor (bir kez).
+//  1.9.4: konum biliniyorsa telefonun kendi GERÇEK kuzey verisi (trueHeading) gönderilir → 3. değer 1.
+//         Konum yoksa eskisi gibi manyetik kuzey gider (3. değer 0) ve web sapmayı kendi ekler.
 //
 
 import Foundation
@@ -17,6 +19,7 @@ final class Pusula: NSObject, CLLocationManagerDelegate {
         super.init()
         lm.delegate = self
         lm.headingFilter = 1
+        lm.desiredAccuracy = kCLLocationAccuracyKilometer   // gerçek kuzey için kaba konum yeter, pil yemez
     }
 
     func baslat() {
@@ -24,11 +27,13 @@ final class Pusula: NSObject, CLLocationManagerDelegate {
         if lm.authorizationStatus == .notDetermined { lm.requestWhenInUseAuthorization() }
         acik = true
         lm.startUpdatingHeading()
+        lm.startUpdatingLocation()   // trueHeading'in dolması için gerekli (yalnız pusula açıkken)
     }
 
     func durdur() {
         acik = false
         lm.stopUpdatingHeading()
+        lm.stopUpdatingLocation()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading h: CLHeading) {
@@ -36,12 +41,15 @@ final class Pusula: NSObject, CLLocationManagerDelegate {
         let t = Date().timeIntervalSince1970
         if t - sonGonderim < 0.08 { return }   // ~12 Hz yeter
         sonGonderim = t
-        // Web manyetik kuzeyi bekler ve sapmayı kendi ekler (Android ile aynı yol)
-        let derece = h.magneticHeading
+        let gercekVar = h.trueHeading >= 0
+        let derece = gercekVar ? h.trueHeading : h.magneticHeading
         let dogruluk = h.headingAccuracy   // <0: güvenilmez → web "8 çiz" ipucu gösterir
         let acc = dogruluk < 0 ? 0 : (dogruluk < 15 ? 3 : (dogruluk < 30 ? 2 : 1))
-        wv.evaluateJavaScript("window.hvNativeHeading && hvNativeHeading(\(derece), \(acc)); true;", completionHandler: nil)
+        wv.evaluateJavaScript("window.hvNativeHeading && hvNativeHeading(\(derece), \(acc), \(gercekVar ? 1 : 0)); true;", completionHandler: nil)
     }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {}
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {}
 
     func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { false }
 }

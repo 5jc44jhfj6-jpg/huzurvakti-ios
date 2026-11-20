@@ -16,6 +16,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     userContentController.add(WKSMH, name: "push-token")
     userContentController.add(WKSMH, name: "schedule-local-notification")
     userContentController.add(WKSMH, name: "clear-local-notifications")
+    userContentController.add(WKSMH, name: "bildirim-plani")   // 1.9.4: 30 günlük plan (bildirimler kesilmesin)
     userContentController.add(WKSMH, name: "widget-data")
     userContentController.add(WKSMH, name: "compass")
     userContentController.add(WKSMH, name: "canli")

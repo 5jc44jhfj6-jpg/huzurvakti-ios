@@ -451,6 +451,10 @@ extension ViewController: WKScriptMessageHandler {
         }
         if message.name == "clear-local-notifications" {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            HVBildirimPlani.temizle()   // 1.9.4: eski plan geri kurulmasın
+        }
+        if message.name == "bildirim-plani" {
+            HVBildirimPlani.kaydet(message.body)
         }
         if message.name == "schedule-local-notification" {
             if let dict = message.body as? [String: Any],
