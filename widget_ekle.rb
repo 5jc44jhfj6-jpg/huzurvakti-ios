@@ -21,7 +21,7 @@ ana = proje.targets.find { |t| t.name == ANA } or abort("Ana hedef yok")
 end
 
 # 1) Ana uygulamaya WidgetBridge.swift ve Pusula.swift
-['WidgetBridge.swift', 'Pusula.swift', 'NDCanli.swift'].each do |dosya|
+['WidgetBridge.swift', 'Pusula.swift', 'NDCanli.swift', 'Bildirim.swift'].each do |dosya|
   unless ana.source_build_phase.files_references.any? { |f| f && f.path && f.path.end_with?(dosya) }
     ref = proje.main_group.new_reference("#{ANA}/#{dosya}")
     ana.source_build_phase.add_file_reference(ref)
@@ -66,8 +66,8 @@ uz.build_configurations.each do |c|
   s['SUPPORTS_MACCATALYST'] = 'NO'
   s['SKIP_INSTALL'] = 'YES'
   s['GENERATE_INFOPLIST_FILE'] = 'NO'
-  s['MARKETING_VERSION'] = '1.9.3'
-  s['CURRENT_PROJECT_VERSION'] = '25'
+  s['MARKETING_VERSION'] = '1.9.4'
+  s['CURRENT_PROJECT_VERSION'] = '26'
   s['ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME'] = ''
   s['ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME'] = ''
   s['LD_RUNPATH_SEARCH_PATHS'] = ['$(inherited)', '@executable_path/Frameworks', '@executable_path/../../Frameworks']
