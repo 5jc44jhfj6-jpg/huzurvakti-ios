@@ -36,6 +36,24 @@ extension Color {
 let hvCZemin = RadialGradient(colors: [Color.hvC1, Color.hvC2], center: UnitPoint(x: 0.3, y: 0), startRadius: 0, endRadius: 360)
 let hvCHap = LinearGradient(colors: [Color(red: 0.914, green: 0.722, blue: 0.353), Color(red: 0.776, green: 0.541, blue: 0.173)], startPoint: .leading, endPoint: .trailing)
 
+/// 1.9.5: "karışık" stil — vakte göre cami fotoğrafı + okunaklılık için koyu örtü
+struct HVCFotoZemin: View {
+    let foto: String
+    var ust: Double = 0.35
+    var alt: Double = 0.85
+    var yatay: Bool = false
+    var body: some View {
+        ZStack {
+            Color.hvC2
+            Image(foto).resizable().aspectRatio(contentMode: .fill)
+            LinearGradient(colors: [Color(red: 0.078, green: 0.047, blue: 0.024).opacity(ust),
+                                    Color(red: 0.078, green: 0.047, blue: 0.024).opacity(alt)],
+                           startPoint: yatay ? .leading : .top, endPoint: yatay ? .trailing : .bottom)
+        }
+        .clipped()
+    }
+}
+
 let hvKremZemin = LinearGradient(colors: [Color.hvKrem, Color.hvKrem2], startPoint: .topLeading, endPoint: .bottomTrailing)
 let hvKoyuZemin = LinearGradient(colors: [Color.hvEsp2, Color.hvEsp], startPoint: .top, endPoint: .bottom)
 let hvAltinHap = LinearGradient(colors: [Color(red: 0.906, green: 0.769, blue: 0.486), Color.hvAltin], startPoint: .top, endPoint: .bottom)
@@ -181,7 +199,7 @@ enum HVHesap {
     /// v1.9.1: 15 dakikada bir değişen âyet (havuzdan, zamana göre sabit seçim)
     static func donenAyet(_ t: Date, _ v: HVVeri?, kisa: Bool) -> HVAyet? {
         var h = v?.havuz ?? []
-        if kisa { h = h.filter { $0.m.count <= 100 } }
+        if kisa { h = h.filter { $0.m.count <= 72 } }   // 1.9.5: kilit ekranında hiç kesilmesin
         guard !h.isEmpty else { return nil }
         let dilim = Int(floor(t.timeIntervalSince1970 / 900))
         let k = ((dilim &* 48271) % 2147483647 + 2147483647) % 2147483647
@@ -194,7 +212,7 @@ enum HVHesap {
         let bugun = v?.gunler?.first(where: { $0.d == bugunK }) ?? v?.gunler?.first
         let gunluk = v?.ayetler?.first(where: { $0.d == bugunK }) ?? v?.ayetler?.first
         let ayet = donenAyet(simdi, v, kisa: false) ?? gunluk
-        let kisa = donenAyet(simdi, v, kisa: true) ?? ((gunluk?.m.count ?? 999) <= 100 ? gunluk : nil)
+        let kisa = donenAyet(simdi, v, kisa: true) ?? ((gunluk?.m.count ?? 999) <= 72 ? gunluk : nil)
         if let ix = tum.firstIndex(where: { $0.t > simdi }) {
             let s = tum[ix]
             let once = ix > 0 ? tum[ix - 1].t : s.t.addingTimeInterval(-6 * 3600)
@@ -338,6 +356,7 @@ struct HVCSayac: View {   // canlı, 0'da durur
             .foregroundColor(.hvCSayi)
             .lineLimit(1)
             .minimumScaleFactor(0.55)
+            .shadow(color: .black.opacity(0.6), radius: 3, y: 1)
     }
 }
 
@@ -380,7 +399,7 @@ struct HVCKucuk: View {
             Text("☾").font(.system(size: 14)).foregroundColor(.hvCCizgi)
         }
         .padding(14)
-        .hvZemin { hvCZemin }
+        .hvZemin { HVCFotoZemin(foto: an.foto, ust: 0.35, alt: 0.8) }
         .widgetURL(hvLink("vakit"))
     }
 }
@@ -404,7 +423,7 @@ struct HVCOrta: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
-        .hvZemin { hvCZemin }
+        .hvZemin { HVCFotoZemin(foto: an.foto, ust: 0.5, alt: 0.88, yatay: true) }
         .widgetURL(hvLink("vakit"))
     }
     static func kisaTarih(_ t: Date) -> String {
@@ -435,7 +454,7 @@ struct HVCBuyuk: View {
             }
         }
         .padding(14)
-        .hvZemin { hvCZemin }
+        .hvZemin { HVCFotoZemin(foto: an.foto, ust: 0.35, alt: 0.92) }
         .widgetURL(hvLink("vakit"))
     }
 }
@@ -657,55 +676,46 @@ struct HVAyetGorunum: View {
         Group {
             switch aile {
             case .accessoryRectangular:
-                // 1.9.4: ❁ GÜNÜN ÂYETİ · yalnız Türkçe meâl + "Sûre · âyet" (kilit ekranının altına da konur)
-                VStack(alignment: .center, spacing: 1) {
-                    Text("❁ GÜNÜN ÂYETİ").font(.system(size: 10, weight: .semibold)).opacity(0.85).widgetAccentable()
-                    Text(hvTirnak(kilitMetin))
-                        .font(.system(size: 13, weight: .medium, design: .serif).italic())
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.7)
-                    Text(kilitKaynak).font(.system(size: 10, weight: .medium)).opacity(0.8).lineLimit(1)
+                // 1.9.5: "Sade âyet" — başlık yok, kısa âyet büyük yazı, kaynak sağ altta (hiç kesilmez: ≤72 harf)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(kilitMetin.trimmingCharacters(in: CharacterSet(charactersIn: "“”\"").union(.whitespaces)))
+                        .font(.system(size: 15, weight: .medium, design: .serif).italic())
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.75)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .widgetAccentable()
+                    Text(kilitAyet?.kk ?? "Ra'd 28")
+                        .font(.system(size: 11, weight: .medium)).opacity(0.7).lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .frame(maxWidth: .infinity)
                 .hvZemin { Color.clear }
             case .systemSmall:
+                // 1.9.5: karışık stil — vakte göre cami + koyu örtü
                 VStack(spacing: 6) {
-                    Text("❁ ÂYET-İ KERÎME").font(hvSerif(10, .semibold)).tracking(1).foregroundColor(Color(red: 0.54, green: 0.35, blue: 0.13))
-                    Text(hvTirnak(kilitMetin)).font(hvSerif(13).italic()).foregroundColor(.hvEsp).multilineTextAlignment(.center).minimumScaleFactor(0.55)
-                    Text(kilitAyet?.kk ?? "Ra'd 28").font(hvSerif(10.5, .medium)).foregroundColor(.hvKahve)
+                    Text("❁ GÜNÜN ÂYETİ").font(.system(size: 10, weight: .semibold)).tracking(1.2).foregroundColor(.hvCEtiket)
+                    Text(hvTirnak(kilitMetin)).font(hvSerif(13.5).italic()).foregroundColor(.hvCYazi)
+                        .multilineTextAlignment(.center).minimumScaleFactor(0.6)
+                        .shadow(color: .black.opacity(0.6), radius: 2, y: 1)
+                    Text(kilitAyet?.kk ?? "Ra'd 28").font(.system(size: 10.5, weight: .medium)).foregroundColor(.hvCEtiket)
                 }
                 .padding(12)
-                .hvZemin { hvKremZemin }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .hvZemin { HVCFotoZemin(foto: an.foto, ust: 0.45, alt: 0.88) }
             default:
-                GeometryReader { g in
-                    ZStack(alignment: .topLeading) {
-                        if uzun {
-                            HVFoto(ad: an.foto).opacity(0.16).frame(width: g.size.width, height: g.size.height).clipped()
-                        } else {
-                            HStack { Spacer(minLength: 0)
-                                HVFoto(ad: "vakit_aksam").frame(width: g.size.width * 0.41, height: g.size.height).clipped()
-                                    .mask(LinearGradient(colors: [.clear, .black, .black], startPoint: .leading, endPoint: .trailing))
-                            }
-                        }
-                        VStack(alignment: .leading, spacing: 0) {
-                            HStack { Spacer(); HVRozet(yazi: "❁ Âyet-i Kerîme ❁", boy: 11.5); Spacer() }
-                                .padding(.top, 8)
-                            Spacer(minLength: 2)
-                            Text(hvTirnak(metin))
-                                .font(hvSerif(uzun ? 13.5 : 17).italic())
-                                .foregroundColor(.hvEsp)
-                                .lineSpacing(1)
-                                .minimumScaleFactor(0.6)
-                                .frame(width: uzun ? g.size.width - 32 : g.size.width * 0.6, alignment: .leading)
-                            Spacer(minLength: 2)
-                            LinearGradient(colors: [.hvAltin, .clear], startPoint: .leading, endPoint: .trailing).frame(width: 150, height: 1)
-                            Text(kaynak).font(hvSerif(11.5, .medium)).foregroundColor(.hvKahve).padding(.top, 4).padding(.bottom, 10)
-                        }
-                        .padding(.horizontal, 16)
-                    }
+                VStack(spacing: 6) {
+                    Text("❁ GÜNÜN ÂYETİ ❁").font(.system(size: 10.5, weight: .semibold)).tracking(1.4).foregroundColor(.hvCEtiket)
+                    Text(hvTirnak(metin))
+                        .font(hvSerif(uzun ? 14 : 16.5).italic())
+                        .foregroundColor(.hvCYazi)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(1)
+                        .minimumScaleFactor(0.6)
+                        .shadow(color: .black.opacity(0.6), radius: 2, y: 1)
+                    Text(kaynak).font(.system(size: 11, weight: .medium)).foregroundColor(.hvCEtiket)
                 }
-                .hvZemin { hvKremZemin }
+                .padding(.horizontal, 20).padding(.vertical, 12)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .hvZemin { HVCFotoZemin(foto: an.foto, ust: 0.45, alt: 0.88) }
             }
         }
         .widgetURL(hvLink("ayet"))
