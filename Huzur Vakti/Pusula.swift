@@ -53,3 +53,64 @@ final class Pusula: NSObject, CLLocationManagerDelegate {
 
     func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { false }
 }
+
+//
+//  1.9.5: Konum — web'in navigator.geolocation'ı yerine telefonun kendi konumu.
+//  WKWebView her açılışta "…github.io konumunuzu kullanmak istiyor" diye ayrıca soruyordu.
+//  Artık izin yalnız BİR KEZ (iPhone'un kendi penceresi) sorulur; sonra kıble/şehir sessizce açılır.
+//
+final class HVKonum: NSObject, CLLocationManagerDelegate {
+    static let paylasilan = HVKonum()
+    private let lm = CLLocationManager()
+    private var bekliyor = false
+
+    override init() {
+        super.init()
+        lm.delegate = self
+        lm.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    }
+
+    func iste() {
+        bekliyor = true
+        switch lm.authorizationStatus {
+        case .notDetermined:
+            lm.requestWhenInUseAuthorization()          // ilk ve tek soru
+        case .denied, .restricted:
+            bekliyor = false
+            gonderHata(1)
+        default:
+            if let son = lm.location, Date().timeIntervalSince(son.timestamp) < 120 { gonder(son) }
+            lm.requestLocation()
+        }
+    }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        guard bekliyor else { return }
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways: manager.requestLocation()
+        case .denied, .restricted: bekliyor = false; gonderHata(1)
+        default: break
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let l = locations.last else { return }
+        bekliyor = false
+        gonder(l)
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if let son = manager.location { gonder(son); return }
+        bekliyor = false
+        gonderHata(2)
+    }
+
+    private func gonder(_ l: CLLocation) {
+        let js = "window.__hvNativeKonum && window.__hvNativeKonum(\(l.coordinate.latitude), \(l.coordinate.longitude), \(max(1, l.horizontalAccuracy))); true;"
+        DispatchQueue.main.async { webView?.evaluateJavaScript(js, completionHandler: nil) }
+    }
+
+    private func gonderHata(_ kod: Int) {
+        DispatchQueue.main.async { webView?.evaluateJavaScript("window.__hvNativeKonumHata && window.__hvNativeKonumHata(\(kod)); true;", completionHandler: nil) }
+    }
+}

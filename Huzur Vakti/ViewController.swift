@@ -453,6 +453,9 @@ extension ViewController: WKScriptMessageHandler {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             HVBildirimPlani.temizle()   // 1.9.4: eski plan geri kurulmasın
         }
+        if message.name == "konum" {
+            HVKonum.paylasilan.iste()   // 1.9.5
+        }
         if message.name == "bildirim-plani" {
             HVBildirimPlani.kaydet(message.body)
         }
